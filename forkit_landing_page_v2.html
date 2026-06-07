@@ -1,0 +1,197 @@
+
+<h2 class="sr-only">Forkit.com landing page mockup — a curated database of VC-backed startups with vertical niche fork ideas for solo founders</h2>
+
+<style>
+  .fk { font-family: var(--font-sans); color: var(--color-text-primary); }
+  .fk-nav { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .fk-logo { font-family: var(--font-mono); font-size: 15px; font-weight: 500; letter-spacing: -0.3px; }
+  .fk-logo span { color: var(--color-text-secondary); }
+  .fk-nav-right { display: flex; align-items: center; gap: 20px; }
+  .fk-nav-link { font-size: 13px; color: var(--color-text-secondary); text-decoration: none; cursor: pointer; }
+  .fk-nav-link:hover { color: var(--color-text-primary); }
+  .fk-suggest-btn { font-size: 12px; font-family: var(--font-mono); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 14px; background: transparent; color: var(--color-text-primary); cursor: pointer; }
+  .fk-suggest-btn:hover { background: var(--color-background-secondary); }
+
+  .fk-hero { padding: 3rem 1.5rem 2.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .fk-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1rem; }
+  .fk-h1 { font-size: 38px; font-weight: 500; line-height: 1.15; max-width: 520px; margin-bottom: 1rem; letter-spacing: -0.5px; }
+  .fk-h1 em { font-style: italic; color: var(--color-text-secondary); font-weight: 400; }
+  .fk-hero-sub { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; max-width: 420px; margin-bottom: 2rem; }
+  .fk-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fk-tag { font-family: var(--font-mono); font-size: 11px; padding: 4px 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: 100px; color: var(--color-text-secondary); background: var(--color-background-secondary); }
+
+  .fk-stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .fk-stat { padding: 1.25rem 1.5rem; border-right: 0.5px solid var(--color-border-tertiary); }
+  .fk-stat:last-child { border-right: none; }
+  .fk-stat-num { font-size: 26px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 2px; }
+  .fk-stat-label { font-size: 12px; color: var(--color-text-secondary); }
+
+  .fk-main { padding: 1.5rem; }
+  .fk-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .fk-section-label { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); letter-spacing: 1px; text-transform: uppercase; }
+  .fk-filter-row { display: flex; gap: 6px; }
+  .fk-filter { font-size: 11px; font-family: var(--font-mono); border: 0.5px solid var(--color-border-tertiary); border-radius: 100px; padding: 3px 10px; background: transparent; color: var(--color-text-secondary); cursor: pointer; }
+  .fk-filter.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+
+  .fk-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 12px; background: var(--color-background-primary); cursor: pointer; transition: border-color 0.15s; }
+  .fk-card:hover { border-color: var(--color-border-primary); }
+  .fk-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .fk-card-name { font-size: 18px; font-weight: 500; letter-spacing: -0.3px; margin-bottom: 3px; }
+  .fk-card-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 12px; }
+  .fk-card-right { text-align: right; flex-shrink: 0; }
+  .fk-raised { font-family: var(--font-mono); font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .fk-round { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border: 0.5px solid var(--color-border-secondary); border-radius: 100px; color: var(--color-text-secondary); display: inline-block; }
+  .fk-divider { height: 0.5px; background: var(--color-border-tertiary); margin-bottom: 10px; }
+  .fk-forks-label { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .fk-fork-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .fk-fork { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); }
+  .fk-fork-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; line-height: 1.4; }
+  .fk-fork-niche { font-family: var(--font-mono); font-size: 10px; color: var(--color-text-secondary); }
+  .fk-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .fk-forks-count { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-secondary); }
+  .fk-see-forks { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-primary); }
+
+  .fk-submit-band { margin-top: 1.5rem; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .fk-submit-text { }
+  .fk-submit-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .fk-submit-sub { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+  .fk-submit-form { display: flex; gap: 8px; flex-shrink: 0; }
+  .fk-submit-input { font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 12px; background: var(--color-background-primary); color: var(--color-text-primary); width: 200px; }
+  .fk-submit-go { font-size: 12px; font-family: var(--font-mono); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 16px; background: var(--color-text-primary); color: var(--color-background-primary); cursor: pointer; }
+</style>
+
+<div class="fk">
+  <nav class="fk-nav">
+    <div class="fk-logo">fork<span>it</span></div>
+    <div class="fk-nav-right">
+      <span class="fk-nav-link">startups</span>
+      <span class="fk-nav-link">all forks</span>
+      <button class="fk-suggest-btn" onclick="sendPrompt('What should the suggest a startup form look like for forkit?')">suggest a startup ↗</button>
+    </div>
+  </nav>
+
+  <div class="fk-hero">
+    <div class="fk-eyebrow">for solo founders</div>
+    <h1 class="fk-h1">Their billion-dollar idea,<br><em>your vertical niche.</em></h1>
+    <p class="fk-hero-sub">We take VC-backed horizontal startups and find the smaller, focused versions a solo founder can actually build and own.</p>
+    <div class="fk-tags">
+      <span class="fk-tag">bootstrappable</span>
+      <span class="fk-tag">no-code friendly</span>
+      <span class="fk-tag">real revenue</span>
+      <span class="fk-tag">solo founder</span>
+      <span class="fk-tag">niche markets</span>
+    </div>
+  </div>
+
+  <div class="fk-stats-bar">
+    <div class="fk-stat">
+      <div class="fk-stat-num">47</div>
+      <div class="fk-stat-label">startups covered</div>
+    </div>
+    <div class="fk-stat">
+      <div class="fk-stat-num">380+</div>
+      <div class="fk-stat-label">fork ideas</div>
+    </div>
+    <div class="fk-stat">
+      <div class="fk-stat-num">weekly</div>
+      <div class="fk-stat-label">new drops</div>
+    </div>
+  </div>
+
+  <div class="fk-main">
+    <div class="fk-section-header">
+      <div class="fk-section-label">latest startups</div>
+      <div class="fk-filter-row">
+        <button class="fk-filter active">all</button>
+        <button class="fk-filter">saas</button>
+        <button class="fk-filter">ai</button>
+        <button class="fk-filter">marketplace</button>
+      </div>
+    </div>
+
+    <div class="fk-card">
+      <div class="fk-card-top">
+        <div>
+          <div class="fk-card-name">Notion</div>
+        </div>
+        <div class="fk-card-right">
+          <div class="fk-raised">$343M</div>
+          <span class="fk-round">Series C</span>
+        </div>
+      </div>
+      <p class="fk-card-desc">All-in-one workspace for notes, wikis, and project management. Built for everyone — which means it's perfectly built for no one in particular.</p>
+      <div class="fk-divider"></div>
+      <div class="fk-forks-label">fork ideas</div>
+      <div class="fk-fork-grid">
+        <div class="fk-fork">
+          <div class="fk-fork-title">Patient intake wikis for solo GPs</div>
+          <div class="fk-fork-niche">healthcare</div>
+        </div>
+        <div class="fk-fork">
+          <div class="fk-fork-title">Job-site documentation for contractors</div>
+          <div class="fk-fork-niche">construction</div>
+        </div>
+        <div class="fk-fork">
+          <div class="fk-fork-title">Church membership & sermon notes hub</div>
+          <div class="fk-fork-niche">faith communities</div>
+        </div>
+        <div class="fk-fork">
+          <div class="fk-fork-title">Band setlist & rehearsal planner</div>
+          <div class="fk-fork-niche">music</div>
+        </div>
+      </div>
+      <div class="fk-card-footer">
+        <span class="fk-forks-count">12 fork ideas total</span>
+        <span class="fk-see-forks" onclick="sendPrompt('What should the Notion startup detail page look like on forkit?')">see all forks →</span>
+      </div>
+    </div>
+
+    <div class="fk-card">
+      <div class="fk-card-top">
+        <div>
+          <div class="fk-card-name">Linear</div>
+        </div>
+        <div class="fk-card-right">
+          <div class="fk-raised">$52M</div>
+          <span class="fk-round">Series B</span>
+        </div>
+      </div>
+      <p class="fk-card-desc">Issue tracking and project management for software teams. Beautifully designed, but assumes every team looks like a Silicon Valley startup.</p>
+      <div class="fk-divider"></div>
+      <div class="fk-forks-label">fork ideas</div>
+      <div class="fk-fork-grid">
+        <div class="fk-fork">
+          <div class="fk-fork-title">Bug tracker for boutique law firms</div>
+          <div class="fk-fork-niche">legal</div>
+        </div>
+        <div class="fk-fork">
+          <div class="fk-fork-title">Campaign task tracker for local politicians</div>
+          <div class="fk-fork-niche">politics</div>
+        </div>
+        <div class="fk-fork">
+          <div class="fk-fork-title">Renovation punch-list tool for architects</div>
+          <div class="fk-fork-niche">architecture</div>
+        </div>
+        <div class="fk-fork">
+          <div class="fk-fork-title">Production tracker for indie game studios</div>
+          <div class="fk-fork-niche">gaming</div>
+        </div>
+      </div>
+      <div class="fk-card-footer">
+        <span class="fk-forks-count">10 fork ideas total</span>
+        <span class="fk-see-forks">see all forks →</span>
+      </div>
+    </div>
+
+    <div class="fk-submit-band">
+      <div class="fk-submit-text">
+        <div class="fk-submit-title">Know a startup we should fork?</div>
+        <div class="fk-submit-sub">Drop the name and we'll cover it in an upcoming issue.</div>
+      </div>
+      <div class="fk-submit-form">
+        <input class="fk-submit-input" placeholder="e.g. Figma, Webflow, Stripe..." />
+        <button class="fk-submit-go">suggest →</button>
+      </div>
+    </div>
+  </div>
+</div>
