@@ -80,18 +80,18 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </nav>
 
-      <section className="border-b border-border px-6 py-12">
-        <div className="font-mono text-[11px] uppercase text-muted-foreground">
+      <section className="border-b border-border px-6 py-20">
+        <div className="font-mono text-[13px] uppercase text-muted-foreground">
           for solo founders
         </div>
-        <h1 className="mt-4 max-w-[540px] text-[38px] font-medium leading-[1.15] tracking-normal">
+        <h1 className="mt-4 text-[44px] font-semibold leading-[1.05] tracking-[-1.5px] md:text-[72px]">
           Their billion-dollar idea,
           <br />
           <em className="font-normal text-muted-foreground">
             your vertical niche.
           </em>
         </h1>
-        <p className="mt-4 max-w-[430px] text-sm leading-7 text-muted-foreground">
+        <p className="mt-4 max-w-[500px] text-lg leading-[1.8] text-muted-foreground">
           We take VC-backed horizontal startups and find the smaller, focused
           versions a solo founder can actually build and own.
         </p>
@@ -117,10 +117,10 @@ export default async function Home({ searchParams }: HomeProps) {
               index !== stats.length - 1 && "sm:border-r",
             )}
           >
-            <div className="text-[26px] font-medium leading-tight">
+            <div className="text-[32px] font-medium leading-tight">
               {stat.value}
             </div>
-            <div className="mt-1 text-xs text-muted-foreground">
+            <div className="mt-1 text-sm text-muted-foreground">
               {stat.label}
             </div>
           </div>
