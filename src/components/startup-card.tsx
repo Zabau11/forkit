@@ -70,7 +70,7 @@ export function StartupCard({ startup }: StartupCardProps) {
           {startup.forkIdeas.length} fork ideas total
         </span>
         <Link
-          href={`#${startup.id}`}
+          href={`/startups/${startup.slug}`}
           className="inline-flex items-center gap-1 font-mono text-[11px] text-foreground transition-colors hover:text-ring"
         >
           see all forks
