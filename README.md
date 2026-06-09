@@ -29,3 +29,31 @@ The landing page reads from:
 - `landing_settings`
 
 The suggestion form inserts into `startup_suggestions`.
+
+## Review Workflow
+
+Generated ideas are reviewed outside the website.
+
+1. Copy the example review file:
+
+   ```bash
+   mkdir -p generated
+   cp generated-review.example.json generated/startups-review.json
+   ```
+
+2. Edit `generated/startups-review.json`.
+
+   Set each idea to either:
+
+   - `approved`
+   - `rejected`
+
+3. Add `SUPABASE_SERVICE_ROLE_KEY` to `.env.local`.
+
+4. Import approved ideas:
+
+   ```bash
+   npm run import:approved
+   ```
+
+Only ideas marked `approved` are inserted into Supabase.

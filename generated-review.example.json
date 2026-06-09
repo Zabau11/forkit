@@ -1,0 +1,27 @@
+{
+  "startups": [
+    {
+      "name": "Mercury",
+      "description": "Modern banking for startups, reworked for overlooked niches.",
+      "category": "saas",
+      "amountRaised": "$250M",
+      "roundLabel": "Series C",
+      "sortOrder": 10,
+      "ideas": [
+        {
+          "status": "approved",
+          "title": "Banking dashboard for boutique accounting firms",
+          "niche": "accounting",
+          "sortOrder": 10
+        },
+        {
+          "status": "rejected",
+          "title": "Generic bank account for everyone",
+          "niche": "small business",
+          "sortOrder": 20,
+          "notes": "Too broad for Forkit."
+        }
+      ]
+    }
+  ]
+}
