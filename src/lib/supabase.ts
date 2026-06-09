@@ -221,7 +221,7 @@ const featuredStartupDetails: StartupDetail[] = [
     description:
       "Modern banking for startups, reworked for overlooked niches that need cash visibility, approvals, and lightweight financial operations more than another generic business account.",
     category: "saas",
-    amountRaised: "VC-backed",
+    amountRaised: "$250M",
     roundLabel: "Series C",
     sortOrder: 0,
     createdAt: "2026-06-08T00:00:00.000Z",

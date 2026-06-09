@@ -73,9 +73,18 @@ export default async function StartupPage({ params }: StartupPageProps) {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <nav className="flex items-center justify-between border-b border-border px-6 py-5">
-        <Link href="/" className="font-mono text-[15px] font-medium">
-          fork<span className="text-muted-foreground">it</span>
-        </Link>
+        <div className="flex items-center gap-5">
+          <Link href="/" className="font-mono text-[15px] font-medium">
+            fork<span className="text-muted-foreground">it</span>
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="size-3" aria-hidden="true" />
+            back
+          </Link>
+        </div>
         <div className="flex items-center gap-5">
           <Link
             href="/#startups"
@@ -96,16 +105,6 @@ export default async function StartupPage({ params }: StartupPageProps) {
         </div>
       </nav>
 
-      <section className="border-b border-border px-6 py-5">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 font-mono text-[11px] text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="size-3" aria-hidden="true" />
-          back to landing
-        </Link>
-      </section>
-
       <section className="grid border-b border-border lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="px-6 py-10 md:py-14">
           <div className="flex flex-wrap items-center gap-2">
@@ -123,19 +122,24 @@ export default async function StartupPage({ params }: StartupPageProps) {
             </Badge>
           </div>
 
-          <h1 className="mt-5 max-w-4xl text-[48px] font-semibold leading-[1] md:text-[84px]">
-            {startup.name}
-          </h1>
+          <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-end md:gap-6">
+            <h1 className="max-w-4xl text-[48px] font-semibold leading-[1] md:text-[84px]">
+              {startup.name}
+            </h1>
+            <div className="text-[30px] font-medium leading-none text-muted-foreground/80 md:pb-2 md:text-[44px]">
+              {startup.amountRaised}
+            </div>
+          </div>
           <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
             {startup.description}
           </p>
         </div>
 
-        <aside className="border-t border-border px-6 py-8 lg:border-l lg:border-t-0">
+        <aside className="border-t border-border px-8 py-10 lg:border-l lg:border-t-0 lg:px-10 lg:py-12">
           <div className="font-mono text-[11px] uppercase text-muted-foreground">
             pattern to fork
           </div>
-          <p className="mt-4 text-[15px] leading-7">{startup.pattern}</p>
+          <p className="mt-5 text-[15px] leading-[1.8]">{startup.pattern}</p>
           <div className="mt-6 border-t border-border pt-5">
             <div className="font-mono text-[11px] text-muted-foreground">
               {startup.amountRaised}
@@ -155,17 +159,17 @@ export default async function StartupPage({ params }: StartupPageProps) {
             <div
               key={highlight.label}
               className={cn(
-                "border-b border-border px-6 py-6 md:border-b-0",
+                "border-b border-border p-7 md:border-b-0",
                 index !== highlights.length - 1 && "md:border-r",
               )}
             >
-              <div className="mb-4 flex size-8 items-center justify-center rounded-md border border-border bg-secondary text-primary">
-                <Icon className="size-4" aria-hidden="true" />
+              <div className="mb-5 flex size-12 items-center justify-center rounded-md border border-border bg-secondary text-primary">
+                <Icon className="size-6" aria-hidden="true" />
               </div>
-              <div className="font-mono text-[10px] uppercase text-muted-foreground">
+              <div className="font-mono text-[11px] uppercase tracking-[1.5px] text-muted-foreground">
                 {highlight.label}
               </div>
-              <p className="mt-2 text-sm leading-6 text-card-foreground">
+              <p className="mt-3 text-[14px] leading-[1.7] text-card-foreground">
                 {highlight.value}
               </p>
             </div>
@@ -211,9 +215,9 @@ export default async function StartupPage({ params }: StartupPageProps) {
             {startup.forkIdeas.map((idea) => (
               <Card
                 key={idea.id}
-                className="gap-0 rounded-lg border-border/80 py-0 shadow-none"
+                className="min-h-[120px] gap-0 rounded-lg border-border/80 py-0 shadow-none"
               >
-                <CardHeader className="gap-3 p-5 pb-0">
+                <CardHeader className="gap-3 p-7 pb-0">
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-lg font-medium leading-6">
                       {idea.title}
@@ -227,7 +231,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 p-5 pt-4">
+                <CardContent className="space-y-5 p-7 pt-5">
                   <ForkNote label="why" value={idea.whyItWorks} />
                   <ForkNote label="mvp" value={idea.mvp} />
                   <ForkNote label="gtm" value={idea.goToMarket} />
