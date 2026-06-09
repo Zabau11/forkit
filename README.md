@@ -57,3 +57,15 @@ Generated ideas are reviewed outside the website.
    ```
 
 Only ideas marked `approved` are inserted into Supabase.
+
+The review file can include extra viability context on approved ideas:
+
+- `problem`
+- `whyItWorks`
+- `mvp`
+- `goToMarket`
+- `pricing`
+- `viabilityScore`
+- `evidence`
+
+Rejected ideas are ignored by the import script.

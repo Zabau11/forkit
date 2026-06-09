@@ -54,6 +54,50 @@ function getOptionalNumber(value, fallback) {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
+function getOptionalString(value) {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function getOptionalStringArray(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((item) => typeof item === "string" && item.trim());
+}
+
+function getOptionalEvidence(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter(
+      (item) =>
+        item &&
+        typeof item.source === "string" &&
+        item.source.trim() &&
+        typeof item.snippet === "string" &&
+        item.snippet.trim(),
+    )
+    .map((item) => ({
+      source: item.source.trim(),
+      snippet: item.snippet.trim(),
+    }));
+}
+
+function getOptionalViabilityScore(value) {
+  if (value === undefined || value === null || value === "") {
+    return null;
+  }
+
+  if (!Number.isInteger(value) || value < 1 || value > 5) {
+    throw new Error("viabilityScore must be an integer from 1 to 5.");
+  }
+
+  return value;
+}
+
 function normalizeReviewData(data) {
   if (!data || !Array.isArray(data.startups)) {
     throw new Error("Review file must contain a top-level startups array.");
@@ -97,6 +141,7 @@ function normalizeReviewData(data) {
           `startups[${startupIndex}].description`,
         ),
         category,
+        slug: slugify(name),
         amount_raised: getString(
           startup.amountRaised,
           `startups[${startupIndex}].amountRaised`,
@@ -109,10 +154,37 @@ function normalizeReviewData(data) {
           startup.sortOrder,
           (startupIndex + 1) * 10,
         ),
+        website_url: getOptionalString(startup.websiteUrl),
+        source_urls: getOptionalStringArray(startup.sourceUrls),
+        source_summary: getOptionalString(startup.sourceSummary),
+        pattern: getOptionalString(startup.pattern),
+        build_angle: getOptionalString(startup.buildAngle),
+        target_customer: getOptionalString(startup.targetCustomer),
+        starter_stack: getOptionalStringArray(startup.starterStack),
+        enriched_at: startup.sourceSummary ? new Date().toISOString() : null,
         is_published: true,
       },
       slug: slugify(name),
-      approvedIdeas,
+      approvedIdeas: approvedIdeas.map((idea, ideaIndex) => {
+        const sourceIdea = ideas.filter((item) => item.status === "approved")[
+          ideaIndex
+        ];
+
+        return {
+          ...idea,
+          problem: getOptionalString(sourceIdea.problem),
+          why_it_works: getOptionalString(sourceIdea.whyItWorks),
+          mvp: getOptionalString(sourceIdea.mvp),
+          go_to_market: getOptionalString(sourceIdea.goToMarket),
+          pricing: getOptionalString(sourceIdea.pricing),
+          viability_score: getOptionalViabilityScore(sourceIdea.viabilityScore),
+          evidence: getOptionalEvidence(sourceIdea.evidence),
+          generation_model: getOptionalString(sourceIdea.generationModel),
+          generated_at: sourceIdea.generationModel
+            ? new Date().toISOString()
+            : null,
+        };
+      }),
     };
   });
 }
@@ -151,7 +223,7 @@ async function main() {
     const { data: existingStartup, error: lookupError } = await supabase
       .from("startups")
       .select("id")
-      .eq("name", item.startup.name)
+      .eq("slug", item.slug)
       .maybeSingle();
 
     if (lookupError) {
@@ -205,6 +277,15 @@ async function main() {
         title: idea.title,
         niche: idea.niche,
         sort_order: idea.sort_order,
+        problem: idea.problem,
+        why_it_works: idea.why_it_works,
+        mvp: idea.mvp,
+        go_to_market: idea.go_to_market,
+        pricing: idea.pricing,
+        viability_score: idea.viability_score,
+        evidence: idea.evidence,
+        generation_model: idea.generation_model,
+        generated_at: idea.generated_at,
       }));
 
     if (!forkIdeaRows.length) {

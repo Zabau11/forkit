@@ -9,6 +9,18 @@ export type ForkIdea = {
   title: string;
   niche: string;
   sortOrder: number;
+  problem?: string | null;
+  whyItWorks?: string | null;
+  mvp?: string | null;
+  goToMarket?: string | null;
+  pricing?: string | null;
+  viabilityScore?: number | null;
+  evidence?: IdeaEvidence[];
+};
+
+export type IdeaEvidence = {
+  source: string;
+  snippet: string;
 };
 
 export type StartupDetailForkIdea = ForkIdea & {
@@ -53,6 +65,7 @@ export type LandingPageData = {
 
 type StartupRow = {
   id: string;
+  slug?: string | null;
   name: string;
   description: string;
   category: Exclude<CategoryFilter, "all">;
@@ -60,6 +73,10 @@ type StartupRow = {
   round_label: string;
   sort_order: number;
   created_at: string;
+  pattern?: string | null;
+  build_angle?: string | null;
+  target_customer?: string | null;
+  starter_stack?: string[] | null;
   fork_ideas?: ForkIdeaRow[] | null;
 };
 
@@ -68,6 +85,13 @@ type ForkIdeaRow = {
   title: string;
   niche: string;
   sort_order: number;
+  problem?: string | null;
+  why_it_works?: string | null;
+  mvp?: string | null;
+  go_to_market?: string | null;
+  pricing?: string | null;
+  viability_score?: number | null;
+  evidence?: IdeaEvidence[] | null;
 };
 
 type LandingSettingRow = {
@@ -128,6 +152,7 @@ export async function getLandingPageData(
     .select(
       `
         id,
+        slug,
         name,
         description,
         category,
@@ -194,7 +219,7 @@ function mapStartupRow(row: StartupRow): Startup {
 
   return {
     id: row.id,
-    slug: createStartupSlug(row.name),
+    slug: row.slug ?? createStartupSlug(row.name),
     name: row.name,
     description: row.description,
     category: row.category,
@@ -208,6 +233,13 @@ function mapStartupRow(row: StartupRow): Startup {
         title: idea.title,
         niche: idea.niche,
         sortOrder: idea.sort_order,
+        problem: idea.problem ?? null,
+        whyItWorks: idea.why_it_works ?? null,
+        mvp: idea.mvp ?? null,
+        goToMarket: idea.go_to_market ?? null,
+        pricing: idea.pricing ?? null,
+        viabilityScore: idea.viability_score ?? null,
+        evidence: Array.isArray(idea.evidence) ? idea.evidence : [],
       }))
       .sort((a, b) => a.sortOrder - b.sortOrder),
   };
@@ -322,11 +354,58 @@ function expandStartupDetail(startup: Startup): StartupDetail {
     forkIdeas: startup.forkIdeas.map((idea) => ({
       ...idea,
       whyItWorks:
+        idea.whyItWorks ??
         "The niche has a familiar workflow, but the generic category leader speaks to a broader buyer and leaves setup work to the customer.",
-      mvp: `A focused ${idea.niche} workflow around ${idea.title.toLowerCase()}, with templates, reminders, and clean exports.`,
+      mvp:
+        idea.mvp ??
+        `A focused ${idea.niche} workflow around ${idea.title.toLowerCase()}, with templates, reminders, and clean exports.`,
       goToMarket:
+        idea.goToMarket ??
         "Find operators in the niche, offer a concierge setup, and turn their repeated spreadsheet into the first product workflow.",
       pricing:
+        idea.pricing ??
+        "Price as an operating tool, not a utility: start with a monthly team plan and charge more for done-with-you setup.",
+    })),
+  };
+}
+
+function mapStartupDetailRow(row: StartupRow): StartupDetail {
+  const startup = mapStartupRow(row);
+
+  return {
+    ...startup,
+    pattern:
+      row.pattern ??
+      "A horizontal startup workflow repackaged for a narrower customer with sharper defaults, simpler language, and fewer integration assumptions.",
+    buildAngle:
+      row.build_angle ??
+      "Start with the repeated operational pain behind the original product, then remove everything the niche buyer does not need in week one.",
+    targetCustomer:
+      row.target_customer ??
+      "A specific operator who already pays for workarounds, spreadsheets, consultants, or brittle generic software.",
+    starterStack:
+      Array.isArray(row.starter_stack) && row.starter_stack.length
+        ? row.starter_stack
+        : [
+            "Focused onboarding",
+            "Niche templates",
+            "Simple approval workflow",
+            "Exportable reports",
+            "Manual concierge setup",
+          ],
+    forkIdeas: startup.forkIdeas.map((idea) => ({
+      ...idea,
+      whyItWorks:
+        idea.whyItWorks ??
+        "The niche has a familiar workflow, but the generic category leader speaks to a broader buyer and leaves setup work to the customer.",
+      mvp:
+        idea.mvp ??
+        `A focused ${idea.niche} workflow around ${idea.title.toLowerCase()}, with templates, reminders, and clean exports.`,
+      goToMarket:
+        idea.goToMarket ??
+        "Find operators in the niche, offer a concierge setup, and turn their repeated spreadsheet into the first product workflow.",
+      pricing:
+        idea.pricing ??
         "Price as an operating tool, not a utility: start with a monthly team plan and charge more for done-with-you setup.",
     })),
   };
@@ -335,52 +414,53 @@ function expandStartupDetail(startup: Startup): StartupDetail {
 export async function getStartupDetailBySlug(
   slug: string,
 ): Promise<StartupDetail | null> {
+  const supabase = createSupabaseServerClient();
+
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("startups")
+      .select(
+        `
+          id,
+          slug,
+          name,
+          description,
+          category,
+          amount_raised,
+          round_label,
+          sort_order,
+          created_at,
+          pattern,
+          build_angle,
+          target_customer,
+          starter_stack,
+          fork_ideas:startup_fork_ideas (
+            id,
+            title,
+            niche,
+            sort_order,
+            problem,
+            why_it_works,
+            mvp,
+            go_to_market,
+            pricing,
+            viability_score,
+            evidence
+          )
+        `,
+      )
+      .eq("is_published", true)
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!error && data) {
+      return mapStartupDetailRow(data as unknown as StartupRow);
+    }
+  }
+
   const featuredStartup = featuredStartupDetails.find(
     (startup) => startup.slug === slug,
   );
 
-  if (featuredStartup) {
-    return featuredStartup;
-  }
-
-  const supabase = createSupabaseServerClient();
-
-  if (!supabase) {
-    return null;
-  }
-
-  const { data, error } = await supabase
-    .from("startups")
-    .select(
-      `
-        id,
-        name,
-        description,
-        category,
-        amount_raised,
-        round_label,
-        sort_order,
-        created_at,
-        fork_ideas:startup_fork_ideas (
-          id,
-          title,
-          niche,
-          sort_order
-        )
-      `,
-    )
-    .eq("is_published", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    return null;
-  }
-
-  const startupRows = (data ?? []) as unknown as StartupRow[];
-  const startup = startupRows
-    .map(mapStartupRow)
-    .find((row) => row.slug === slug);
-
-  return startup ? expandStartupDetail(startup) : null;
+  return featuredStartup ? expandStartupDetail(featuredStartup) : null;
 }

@@ -6,6 +6,7 @@ set value = excluded.value,
 
 insert into public.startups (
   id,
+  slug,
   name,
   description,
   category,
@@ -17,6 +18,7 @@ insert into public.startups (
 values
   (
     '11111111-1111-4111-8111-111111111111',
+    'notion',
     'Notion',
     'All-in-one workspace for notes, wikis, and project management. Built for everyone, which means it is perfectly built for no one in particular.',
     'saas',
@@ -27,6 +29,7 @@ values
   ),
   (
     '22222222-2222-4222-8222-222222222222',
+    'linear',
     'Linear',
     'Issue tracking and project management for software teams. Beautifully designed, but assumes every team looks like a Silicon Valley startup.',
     'saas',
@@ -37,6 +40,7 @@ values
   )
 on conflict (id) do update
 set name = excluded.name,
+    slug = excluded.slug,
     description = excluded.description,
     category = excluded.category,
     amount_raised = excluded.amount_raised,

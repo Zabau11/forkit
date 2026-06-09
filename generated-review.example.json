@@ -7,12 +7,40 @@
       "amountRaised": "$250M",
       "roundLabel": "Series C",
       "sortOrder": 10,
+      "websiteUrl": "https://mercury.com",
+      "sourceUrls": [
+        "https://mercury.com",
+        "https://www.crunchbase.com/organization/mercury-bank"
+      ],
+      "sourceSummary": "Mercury is a banking and financial operations platform for startups.",
+      "pattern": "A clean financial command center for business banking, cards, transfers, permissions, and cash reporting.",
+      "buildAngle": "Start as the workflow layer around existing bank accounts rather than becoming a bank.",
+      "targetCustomer": "Small operators with real money movement and no in-house finance team.",
+      "starterStack": [
+        "Bank import",
+        "Cash dashboard",
+        "Approval workflow",
+        "Monthly exports"
+      ],
       "ideas": [
         {
           "status": "approved",
           "title": "Banking dashboard for boutique accounting firms",
           "niche": "accounting",
-          "sortOrder": 10
+          "sortOrder": 10,
+          "problem": "Small accounting firms manage cash questions across many client accounts with screenshots and spreadsheets.",
+          "whyItWorks": "The buyer already handles client cash operations and can justify paying for faster monthly close workflows.",
+          "mvp": "Client balance snapshots, transaction review queues, monthly close checklists, and accountant-ready exports.",
+          "goToMarket": "Start with boutique firms that sell monthly advisory retainers.",
+          "pricing": "$99-$399 per firm per month, plus client account tiers.",
+          "viabilityScore": 5,
+          "evidence": [
+            {
+              "source": "https://mercury.com",
+              "snippet": "Mercury positions around startup banking and financial workflows."
+            }
+          ],
+          "generationModel": "manual-example"
         },
         {
           "status": "rejected",
