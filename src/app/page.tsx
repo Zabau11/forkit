@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 
 import { StartupCard } from "@/components/startup-card";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   categoryFilters,
   getLandingPageData,
@@ -28,6 +29,18 @@ const heroTags = [
   "niche markets",
 ];
 
+const latestFork = {
+  startupName: "Mercury",
+  slug: "mercury",
+  fundingRound: "Series C",
+  description: "Modern banking for startups, reworked for overlooked niches.",
+  forkIdeas: [
+    "Banking dashboard for boutique accounting firms",
+    "Cashflow command center for indie film crews",
+    "Operating account tools for local franchise owners",
+  ],
+};
+
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const activeCategory = normalizeCategory(params.category);
@@ -49,8 +62,8 @@ export default async function Home({ searchParams }: HomeProps) {
   ];
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <nav className="flex items-center justify-between border-b border-border px-6 py-5">
+    <main className="relative min-h-screen bg-background text-foreground">
+      <nav className="absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b border-border px-6 py-5">
         <Link href="/" className="font-mono text-[15px] font-medium">
           fork<span className="text-muted-foreground">it</span>
         </Link>
@@ -80,31 +93,81 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </nav>
 
-      <section className="border-b border-border px-6 py-20">
-        <div className="font-mono text-[13px] uppercase text-muted-foreground">
-          for solo founders
-        </div>
-        <h1 className="mt-4 text-[44px] font-semibold leading-[1.05] tracking-[-1.5px] md:text-[72px]">
-          Their billion-dollar idea,
-          <br />
-          <em className="font-normal text-muted-foreground">
-            your vertical niche.
-          </em>
-        </h1>
-        <p className="mt-4 max-w-[500px] text-lg leading-[1.8] text-muted-foreground">
-          We take VC-backed horizontal startups and find the smaller, focused
-          versions a solo founder can actually build and own.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-2">
-          {heroTags.map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="rounded-full border border-border bg-secondary px-3 py-1 font-mono text-[11px] font-normal text-muted-foreground"
-            >
-              {tag}
-            </Badge>
-          ))}
+      <section className="flex h-screen flex-col justify-center border-b border-border px-6">
+        <div className="grid w-full items-center gap-12 md:grid-cols-[minmax(0,1fr)_420px]">
+          <div>
+            <div className="font-mono text-[13px] uppercase text-muted-foreground">
+              for solo founders
+            </div>
+            <h1 className="mt-4 text-[44px] font-semibold leading-[1.05] tracking-[-1.5px] md:text-[72px]">
+              Their billion-dollar idea,
+              <br />
+              <em className="font-normal text-muted-foreground">
+                your vertical niche.
+              </em>
+            </h1>
+            <p className="mt-4 max-w-[500px] text-lg leading-[1.8] text-muted-foreground">
+              We take VC-backed horizontal startups and find the smaller,
+              focused versions a solo founder can actually build and own.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-2">
+              {heroTags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="rounded-full border border-border bg-secondary px-3 py-1 font-mono text-[11px] font-normal text-muted-foreground"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <Link
+            href={`/startups/${latestFork.slug}`}
+            aria-label={`View ${latestFork.startupName} detail page`}
+            className="group hidden w-[420px] self-center rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
+          >
+            <Card className="min-h-[380px] w-[420px] gap-0 rounded-lg border-border/80 bg-card p-8 shadow-none transition-colors group-hover:cursor-pointer group-hover:bg-secondary/80">
+              <CardHeader className="gap-5 p-0">
+                <div className="font-mono text-[11px] uppercase text-muted-foreground">
+                  latest fork
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <CardTitle className="text-[32px] font-semibold leading-none">
+                    {latestFork.startupName}
+                  </CardTitle>
+                  <Badge
+                    variant="outline"
+                    className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-normal text-muted-foreground"
+                  >
+                    {latestFork.fundingRound}
+                  </Badge>
+                </div>
+                <p className="truncate text-sm text-muted-foreground">
+                  {latestFork.description}
+                </p>
+              </CardHeader>
+              <CardContent className="p-0 pt-5">
+                <div className="border-t border-border/70">
+                  {latestFork.forkIdeas.map((idea) => (
+                    <div
+                      key={idea}
+                      className="flex items-center gap-2 border-b border-border/60 py-[18px] last:border-b-0"
+                    >
+                      <ArrowRight
+                        className="size-3 shrink-0 text-primary"
+                        aria-hidden="true"
+                      />
+                      <span className="text-[15px] leading-5 text-card-foreground">
+                        {idea}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </section>
 
