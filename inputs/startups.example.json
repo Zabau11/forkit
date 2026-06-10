@@ -1,0 +1,36 @@
+{
+  "startups": [
+    {
+      "name": "Mercury",
+      "description": "Business banking and financial workflows for startups.",
+      "category": "saas",
+      "amountRaised": "$250M",
+      "roundLabel": "Series C",
+      "websiteUrl": "https://mercury.com",
+      "sourceUrls": [
+        "https://mercury.com",
+        "https://www.crunchbase.com/organization/mercury-bank"
+      ],
+      "sourceNotes": [
+        "Known for banking, cards, transfers, treasury-style cash visibility, and startup-focused financial operations.",
+        "Good fork direction: keep the workflow pattern, narrow the customer segment, and avoid needing to become a bank."
+      ]
+    },
+    {
+      "name": "Ramp",
+      "description": "Corporate cards, spend management, bill pay, procurement, and finance automation.",
+      "category": "saas",
+      "amountRaised": "$300M",
+      "roundLabel": "Growth financing",
+      "websiteUrl": "https://ramp.com",
+      "sourceUrls": [
+        "https://ramp.com",
+        "https://www.crunchbase.com/organization/ramp"
+      ],
+      "sourceNotes": [
+        "Known for combining cards, expense controls, approvals, vendor payments, and finance automation.",
+        "Good fork direction: pick a vertical with repeated spend controls and compliance workflows."
+      ]
+    }
+  ]
+}
