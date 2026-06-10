@@ -30,14 +30,14 @@ const heroTags = [
 ];
 
 const latestFork = {
-  startupName: "Mercury",
-  slug: "mercury",
-  fundingRound: "Series C",
-  description: "Modern banking for startups, reworked for overlooked niches.",
+  startupName: "Canva",
+  slug: "canva",
+  fundingRound: "Private valuation",
+  description: "Design for everyone, reworked for repetitive creator workflows.",
   forkIdeas: [
-    "Banking dashboard for boutique accounting firms",
-    "Cashflow command center for indie film crews",
-    "Operating account tools for local franchise owners",
+    "Property listing design tool for real estate agents",
+    "Weekly menu designer for independent restaurants",
+    "Classroom visual designer for K-12 teachers",
   ],
 };
 

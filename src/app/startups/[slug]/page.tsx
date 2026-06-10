@@ -202,7 +202,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
                 all fork ideas
               </div>
               <h2 className="mt-2 text-2xl font-semibold leading-tight">
-                Pick a niche with painful money movement.
+                Pick a niche with repeated, expensive pain.
               </h2>
             </div>
             <div className="hidden items-center gap-2 font-mono text-[11px] text-muted-foreground sm:flex">
