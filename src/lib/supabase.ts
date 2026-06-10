@@ -119,6 +119,18 @@ export function normalizeCategory(value: string | undefined): CategoryFilter {
   return "all";
 }
 
+export function getFeaturedStartupPageSlugs(): string[] {
+  return featuredStartupDetails.map((startup) => startup.slug);
+}
+
+export function getFeaturedStartupDetailBySlug(
+  slug: string,
+): StartupDetail | null {
+  return (
+    featuredStartupDetails.find((startup) => startup.slug === slug) ?? null
+  );
+}
+
 export function createSupabaseServerClient() {
   if (!supabaseUrl || !supabaseAnonKey) {
     return null;
@@ -374,9 +386,5 @@ export async function getStartupDetailBySlug(
     }
   }
 
-  const featuredStartup = featuredStartupDetails.find(
-    (startup) => startup.slug === slug,
-  );
-
-  return featuredStartup ?? null;
+  return getFeaturedStartupDetailBySlug(slug);
 }

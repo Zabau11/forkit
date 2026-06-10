@@ -15,10 +15,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getStartupDetailBySlug } from "@/lib/supabase";
+import {
+  getFeaturedStartupDetailBySlug,
+  getFeaturedStartupPageSlugs,
+  getStartupDetailBySlug,
+} from "@/lib/supabase";
 import { cn } from "@/lib/utils";
-
-export const dynamic = "force-dynamic";
 
 type StartupPageProps = {
   params: Promise<{
@@ -26,11 +28,16 @@ type StartupPageProps = {
   }>;
 };
 
+export function generateStaticParams() {
+  return getFeaturedStartupPageSlugs().map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({
   params,
 }: StartupPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const startup = await getStartupDetailBySlug(slug);
+  const startup =
+    getFeaturedStartupDetailBySlug(slug) ?? (await getStartupDetailBySlug(slug));
 
   if (!startup) {
     return {
@@ -46,7 +53,8 @@ export async function generateMetadata({
 
 export default async function StartupPage({ params }: StartupPageProps) {
   const { slug } = await params;
-  const startup = await getStartupDetailBySlug(slug);
+  const startup =
+    getFeaturedStartupDetailBySlug(slug) ?? (await getStartupDetailBySlug(slug));
 
   if (!startup) {
     notFound();
