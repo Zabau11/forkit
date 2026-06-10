@@ -94,7 +94,7 @@ export default async function Home({ searchParams }: HomeProps) {
       </nav>
 
       <section className="flex h-screen flex-col justify-center border-b border-border px-6">
-        <div className="grid w-full items-center gap-12 md:grid-cols-[minmax(0,1fr)_420px]">
+        <div className="grid w-full items-center gap-8 md:grid-cols-[minmax(0,0.92fr)_minmax(520px,0.72fr)] lg:gap-4">
           <div>
             <div className="font-mono text-[13px] uppercase text-muted-foreground">
               for solo founders
@@ -126,40 +126,40 @@ export default async function Home({ searchParams }: HomeProps) {
           <Link
             href={`/startups/${latestFork.slug}`}
             aria-label={`View ${latestFork.startupName} detail page`}
-            className="group hidden w-[420px] self-center rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
+            className="group hidden w-full self-center rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
           >
-            <Card className="min-h-[380px] w-[420px] gap-0 rounded-lg border-border/80 bg-card p-8 shadow-none transition-colors group-hover:cursor-pointer group-hover:bg-secondary/80">
-              <CardHeader className="gap-5 p-0">
+            <Card className="min-h-[520px] w-full gap-0 rounded-lg border-border/80 bg-card p-10 shadow-none transition-colors group-hover:cursor-pointer group-hover:bg-secondary/80 xl:p-12">
+              <CardHeader className="gap-7 p-0">
                 <div className="font-mono text-[11px] uppercase text-muted-foreground">
                   latest fork
                 </div>
                 <div className="flex items-start justify-between gap-4">
-                  <CardTitle className="text-[32px] font-semibold leading-none">
+                  <CardTitle className="text-[48px] font-semibold leading-none xl:text-[56px]">
                     {latestFork.startupName}
                   </CardTitle>
                   <Badge
                     variant="outline"
-                    className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-normal text-muted-foreground"
+                    className="mt-1 rounded-full px-3 py-1 font-mono text-[10px] font-normal text-muted-foreground"
                   >
                     {latestFork.fundingRound}
                   </Badge>
                 </div>
-                <p className="truncate text-sm text-muted-foreground">
+                <p className="max-w-[420px] text-base leading-7 text-muted-foreground">
                   {latestFork.description}
                 </p>
               </CardHeader>
-              <CardContent className="p-0 pt-5">
+              <CardContent className="p-0 pt-8">
                 <div className="border-t border-border/70">
                   {latestFork.forkIdeas.map((idea) => (
                     <div
                       key={idea}
-                      className="flex items-center gap-2 border-b border-border/60 py-[18px] last:border-b-0"
+                      className="flex items-center gap-3 border-b border-border/60 py-7 last:border-b-0"
                     >
                       <ArrowRight
-                        className="size-3 shrink-0 text-primary"
+                        className="size-4 shrink-0 text-primary"
                         aria-hidden="true"
                       />
-                      <span className="text-[15px] leading-5 text-card-foreground">
+                      <span className="text-[18px] leading-7 text-card-foreground">
                         {idea}
                       </span>
                     </div>
@@ -219,7 +219,7 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
         ) : null}
 
-        <div className="space-y-3">
+        <div className="grid gap-3 lg:grid-cols-2">
           {data.startups.map((startup) => (
             <div key={startup.id} id={startup.id}>
               <StartupCard startup={startup} />
