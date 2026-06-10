@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, Building2, ExternalLink } from "lucide-react";
 
 import { StartupCard } from "@/components/startup-card";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
@@ -33,12 +33,13 @@ const latestFork = {
   startupName: "Canva",
   slug: "canva",
   fundingRound: "Private valuation",
+  amountRaised: "$40B",
+  category: "SaaS",
   description: "Design for everyone, reworked for repetitive creator workflows.",
-  forkIdeas: [
-    "Property listing design tool for real estate agents",
-    "Weekly menu designer for independent restaurants",
-    "Classroom visual designer for K-12 teachers",
-  ],
+  pattern:
+    "Horizontal design platform for creating graphics, presentations, social assets, and marketing materials.",
+  companySignal:
+    "A broad creative workflow product with repeat usage across teams, creators, and small businesses.",
 };
 
 export default async function Home({ searchParams }: HomeProps) {
@@ -56,7 +57,7 @@ export default async function Home({ searchParams }: HomeProps) {
       label: "fork ideas",
     },
     {
-      value: data.stats.newDropCadence ?? "pending",
+      value: data.stats.newDropCadence ?? "weekly",
       label: "new drops",
     },
   ];
@@ -93,7 +94,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </nav>
 
-      <section className="flex h-screen flex-col justify-center border-b border-border px-6">
+      <section className="flex min-h-screen flex-col justify-center border-b border-border px-6 pb-8 pt-26 md:pt-32">
         <div className="grid w-full items-center gap-8 md:grid-cols-[minmax(0,0.92fr)_minmax(520px,0.72fr)] lg:gap-4">
           <div>
             <div className="font-mono text-[13px] uppercase text-muted-foreground">
@@ -126,44 +127,71 @@ export default async function Home({ searchParams }: HomeProps) {
           <Link
             href={`/startups/${latestFork.slug}`}
             aria-label={`View ${latestFork.startupName} detail page`}
-            className="group hidden w-full self-center rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
+            className="group hidden w-full self-start -translate-y-8 rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
           >
-            <Card className="min-h-[520px] w-full gap-0 rounded-lg border-border/80 bg-card p-10 shadow-none transition-colors group-hover:cursor-pointer group-hover:bg-secondary/80 xl:p-12">
-              <CardHeader className="gap-7 p-0">
-                <div className="font-mono text-[11px] uppercase text-muted-foreground">
-                  latest fork
+            <Card className="relative min-h-[520px] w-full overflow-hidden gap-0 rounded-lg border-border/80 bg-[linear-gradient(135deg,hsl(var(--card))_0%,hsl(var(--secondary))_100%)] p-10 pt-7 shadow-none transition-colors before:absolute before:inset-x-0 before:-top-4 before:bottom-0 before:bg-[linear-gradient(to_right,hsl(var(--border)/0.45)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.35)_1px,transparent_1px)] before:bg-[size:48px_48px] before:opacity-30 group-hover:cursor-pointer group-hover:border-foreground/30 xl:p-12 xl:pt-9">
+              <CardHeader className="relative gap-7 p-0">
+                <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase text-muted-foreground">
+                  <Building2 className="size-3.5" aria-hidden="true" />
+                  featured company
                 </div>
+
                 <div className="flex items-start justify-between gap-4">
                   <CardTitle className="text-[48px] font-semibold leading-none xl:text-[56px]">
                     {latestFork.startupName}
                   </CardTitle>
-                  <Badge
-                    variant="outline"
-                    className="mt-1 rounded-full px-3 py-1 font-mono text-[10px] font-normal text-muted-foreground"
-                  >
-                    {latestFork.fundingRound}
-                  </Badge>
                 </div>
                 <p className="max-w-[420px] text-base leading-7 text-muted-foreground">
                   {latestFork.description}
                 </p>
               </CardHeader>
-              <CardContent className="p-0 pt-8">
-                <div className="border-t border-border/70">
-                  {latestFork.forkIdeas.map((idea) => (
-                    <div
-                      key={idea}
-                      className="flex items-center gap-3 border-b border-border/60 py-7 last:border-b-0"
-                    >
+
+              <CardContent className="relative p-0 pt-8">
+                <div className="grid border-y border-border/70 sm:grid-cols-2">
+                  <div className="border-b border-border/60 py-7 sm:border-b-0 sm:border-r sm:pr-7">
+                    <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                      valuation
+                    </div>
+                    <div className="mt-2 text-[28px] font-medium leading-none">
+                      {latestFork.amountRaised}
+                    </div>
+                  </div>
+                  <div className="py-7 sm:pl-7">
+                    <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                      category
+                    </div>
+                    <div className="mt-2 text-[28px] font-medium leading-none">
+                      {latestFork.category}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-7 space-y-6">
+                  <div className="border-b border-border/70 pb-6">
+                    <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                      company pattern
+                    </div>
+                    <p className="mt-2 text-[17px] leading-7">
+                      {latestFork.pattern}
+                    </p>
+                  </div>
+                  <div className="flex items-end justify-between gap-4">
+                    <div>
+                      <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                        signal
+                      </div>
+                      <p className="mt-2 max-w-[360px] text-sm leading-6 text-muted-foreground">
+                        {latestFork.companySignal}
+                      </p>
+                    </div>
+                    <div className="inline-flex shrink-0 items-center gap-2 font-mono text-[11px] text-foreground">
+                      open company
                       <ArrowRight
-                        className="size-4 shrink-0 text-primary"
+                        className="size-3.5 transition-transform group-hover:translate-x-1"
                         aria-hidden="true"
                       />
-                      <span className="text-[18px] leading-7 text-card-foreground">
-                        {idea}
-                      </span>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>

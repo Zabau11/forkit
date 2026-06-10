@@ -16,8 +16,6 @@ type StartupCardProps = {
 };
 
 export function StartupCard({ startup }: StartupCardProps) {
-  const visibleForkIdeas = startup.forkIdeas.slice(0, 4);
-
   return (
     <Link
       href={`/startups/${startup.slug}`}
@@ -26,9 +24,14 @@ export function StartupCard({ startup }: StartupCardProps) {
     >
       <Card className="flex h-full gap-0 rounded-lg border-border/80 py-0 shadow-none transition-colors group-hover:border-foreground/40 group-hover:bg-secondary/60">
         <CardHeader className="flex grid-cols-none flex-row items-start justify-between gap-4 p-5 pb-0">
-          <CardTitle className="text-lg font-medium leading-tight">
-            {startup.name}
-          </CardTitle>
+          <div>
+            <div className="mb-2 font-mono text-[10px] uppercase text-muted-foreground">
+              company
+            </div>
+            <CardTitle className="text-xl font-medium leading-tight">
+              {startup.name}
+            </CardTitle>
+          </div>
           <div className="shrink-0 text-right">
             <div className="font-mono text-[13px] font-medium">
               {startup.amountRaised}
@@ -47,35 +50,28 @@ export function StartupCard({ startup }: StartupCardProps) {
             {startup.description}
           </p>
 
-          <div className="mt-4 border-t border-border/80 pt-3">
-            <div className="mb-2 font-mono text-[10px] uppercase text-muted-foreground">
-              fork ideas
+          <div className="mt-5 grid grid-cols-2 gap-2 border-t border-border/80 pt-4">
+            <div>
+              <div className="font-mono text-[10px] uppercase text-muted-foreground">
+                category
+              </div>
+              <div className="mt-1 text-sm leading-6">{startup.category}</div>
             </div>
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              {visibleForkIdeas.map((idea) => (
-                <div
-                  key={idea.id}
-                  className="rounded-md border border-border/70 bg-background/60 px-3 py-2.5 transition-colors group-hover:border-foreground/20"
-                >
-                  <div className="text-xs font-medium leading-5">
-                    {idea.title}
-                  </div>
-                  <div className="mt-1 font-mono text-[10px] text-muted-foreground">
-                    {idea.niche}
-                  </div>
-                </div>
-              ))}
+            <div>
+              <div className="font-mono text-[10px] uppercase text-muted-foreground">
+                signal
+              </div>
+              <div className="mt-1 text-sm leading-6">{startup.roundLabel}</div>
             </div>
           </div>
         </CardContent>
 
         <CardFooter className="justify-between gap-4 px-5 pb-5 pt-0">
           <span className="font-mono text-[11px] text-muted-foreground">
-            {startup.forkIdeas.length} fork ideas total
+            {startup.forkIdeas.length} ideas inside
           </span>
           <span className="inline-flex items-center gap-1 font-mono text-[11px] text-foreground transition-colors group-hover:text-ring">
-            see all forks
+            open company
             <ArrowRight
               className="size-3 transition-transform group-hover:translate-x-1"
               aria-hidden="true"
