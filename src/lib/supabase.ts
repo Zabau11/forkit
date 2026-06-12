@@ -1,7 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 
-import { featuredStartupDetails } from "@/data/featured-startups";
-
 export const categoryFilters = ["all", "saas", "ai", "marketplace"] as const;
 
 export type CategoryFilter = (typeof categoryFilters)[number];
@@ -40,6 +38,7 @@ export type Startup = {
   category: Exclude<CategoryFilter, "all">;
   amountRaised: string;
   roundLabel: string;
+  pattern?: string | null;
   sortOrder: number;
   createdAt: string;
   forkIdeas: ForkIdea[];
@@ -119,18 +118,6 @@ export function normalizeCategory(value: string | undefined): CategoryFilter {
   return "all";
 }
 
-export function getFeaturedStartupPageSlugs(): string[] {
-  return featuredStartupDetails.map((startup) => startup.slug);
-}
-
-export function getFeaturedStartupDetailBySlug(
-  slug: string,
-): StartupDetail | null {
-  return (
-    featuredStartupDetails.find((startup) => startup.slug === slug) ?? null
-  );
-}
-
 export function createSupabaseServerClient() {
   if (!supabaseUrl || !supabaseAnonKey) {
     return null;
@@ -172,6 +159,7 @@ export async function getLandingPageData(
         category,
         amount_raised,
         round_label,
+        pattern,
         sort_order,
         created_at,
         fork_ideas:startup_fork_ideas (
@@ -216,17 +204,13 @@ export async function getLandingPageData(
 
   const startupRows = (startupResult.data ?? []) as unknown as StartupRow[];
   const cadenceRow = cadenceResult.data as LandingSettingRow | null;
-  const databaseStartups = startupRows.map(mapStartupRow);
-  const startups = mergeFeaturedStartups(databaseStartups, category);
+  const startups = startupRows.map(mapStartupRow);
 
   return {
     startups,
     stats: {
-      startupCount: startups.length,
-      forkIdeaCount: startups.reduce(
-        (count, startup) => count + startup.forkIdeas.length,
-        0,
-      ),
+      startupCount: startupCountResult.count ?? startups.length,
+      forkIdeaCount: forkIdeaCountResult.count ?? 0,
       newDropCadence: cadenceRow?.value ?? null,
     },
     error: firstError?.message ?? null,
@@ -244,6 +228,7 @@ function mapStartupRow(row: StartupRow): Startup {
     category: row.category,
     amountRaised: row.amount_raised,
     roundLabel: row.round_label,
+    pattern: row.pattern ?? null,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     forkIdeas: forkIdeaRows
@@ -261,39 +246,6 @@ function mapStartupRow(row: StartupRow): Startup {
         evidence: Array.isArray(idea.evidence) ? idea.evidence : [],
       }))
       .sort((a, b) => a.sortOrder - b.sortOrder),
-  };
-}
-
-function mergeFeaturedStartups(
-  databaseStartups: Startup[],
-  category: CategoryFilter,
-): Startup[] {
-  const databaseSlugs = new Set(databaseStartups.map((startup) => startup.slug));
-  const localStartups = featuredStartupDetails
-    .filter(
-      (startup) =>
-        !databaseSlugs.has(startup.slug) &&
-        (category === "all" || startup.category === category),
-    )
-    .map(toLandingStartup);
-
-  return [...localStartups, ...databaseStartups].sort(
-    (a, b) => a.sortOrder - b.sortOrder,
-  );
-}
-
-function toLandingStartup(startup: StartupDetail): Startup {
-  return {
-    id: startup.id,
-    slug: startup.slug,
-    name: startup.name,
-    description: startup.description,
-    category: startup.category,
-    amountRaised: startup.amountRaised,
-    roundLabel: startup.roundLabel,
-    sortOrder: startup.sortOrder,
-    createdAt: startup.createdAt,
-    forkIdeas: startup.forkIdeas,
   };
 }
 
@@ -386,5 +338,5 @@ export async function getStartupDetailBySlug(
     }
   }
 
-  return getFeaturedStartupDetailBySlug(slug);
+  return null;
 }
