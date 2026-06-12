@@ -1,0 +1,154 @@
+{
+  "startups": [
+    {
+      "name": "Shopify",
+      "description": "Commerce platform for online stores, payments, checkout, inventory, shipping, and merchant operations.",
+      "category": "saas",
+      "amountRaised": "$100B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://www.shopify.com",
+      "sourceUrls": [
+        "https://www.shopify.com"
+      ],
+      "sourceNotes": [
+        "Known for giving merchants a general-purpose commerce stack: storefront, checkout, payments, apps, inventory, and order management.",
+        "Good fork direction: pick a merchant type with repeated operational workflows and ship a narrower commerce operating system."
+      ]
+    },
+    {
+      "name": "Toast",
+      "description": "Restaurant point-of-sale, payments, online ordering, payroll, loyalty, and operations software.",
+      "category": "saas",
+      "amountRaised": "$10B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://pos.toasttab.com",
+      "sourceUrls": [
+        "https://pos.toasttab.com"
+      ],
+      "sourceNotes": [
+        "Known for restaurant POS plus payments and operational workflows.",
+        "Good fork direction: build lighter restaurant-adjacent tools for food businesses that need the workflow but not the full POS replacement."
+      ]
+    },
+    {
+      "name": "DocuSign",
+      "description": "Electronic signature and agreement workflow platform for contracts, forms, approvals, and document completion.",
+      "category": "saas",
+      "amountRaised": "$10B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://www.docusign.com",
+      "sourceUrls": [
+        "https://www.docusign.com"
+      ],
+      "sourceNotes": [
+        "Known for horizontal e-signature and agreement workflows across many industries.",
+        "Good fork direction: turn generic signing into vertical intake, compliance, and renewal workflows for one document-heavy niche."
+      ]
+    },
+    {
+      "name": "Datadog",
+      "description": "Observability and monitoring platform for infrastructure, applications, logs, security, and engineering operations.",
+      "category": "saas",
+      "amountRaised": "$40B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://www.datadoghq.com",
+      "sourceUrls": [
+        "https://www.datadoghq.com"
+      ],
+      "sourceNotes": [
+        "Known for broad monitoring, logs, metrics, traces, alerts, and dashboards for engineering teams.",
+        "Good fork direction: package simpler monitoring around one non-enterprise technical workflow where buyers need answers, not dashboards."
+      ]
+    },
+    {
+      "name": "Notion",
+      "description": "All-in-one workspace for docs, notes, projects, knowledge bases, wikis, and lightweight databases.",
+      "category": "saas",
+      "amountRaised": "$10B valuation",
+      "roundLabel": "Private valuation",
+      "websiteUrl": "https://www.notion.com",
+      "sourceUrls": [
+        "https://www.notion.com"
+      ],
+      "sourceNotes": [
+        "Known for flexible workspace building blocks: docs, databases, projects, templates, and collaboration.",
+        "Good fork direction: replace infinite flexibility with an opinionated workspace for one job role or recurring operating cadence."
+      ]
+    },
+    {
+      "name": "Figma",
+      "description": "Collaborative interface design, prototyping, whiteboarding, and design systems platform.",
+      "category": "saas",
+      "amountRaised": "$10B+ valuation",
+      "roundLabel": "Private valuation",
+      "websiteUrl": "https://www.figma.com",
+      "sourceUrls": [
+        "https://www.figma.com"
+      ],
+      "sourceNotes": [
+        "Known for collaborative design files, prototypes, components, variables, whiteboarding, and team workflows.",
+        "Good fork direction: turn collaborative creation into a vertical review, approval, or asset-production workflow for non-design specialists."
+      ]
+    },
+    {
+      "name": "Duolingo",
+      "description": "Consumer learning platform with gamified lessons, streaks, personalization, subscriptions, and mobile-first retention loops.",
+      "category": "saas",
+      "amountRaised": "$10B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://www.duolingo.com",
+      "sourceUrls": [
+        "https://www.duolingo.com"
+      ],
+      "sourceNotes": [
+        "Known for gamified learning loops, short daily lessons, streaks, reminders, and subscription monetization.",
+        "Good fork direction: apply the retention mechanics to narrow professional or hobby learning niches with measurable outcomes."
+      ]
+    },
+    {
+      "name": "Perplexity",
+      "description": "AI answer engine for search, research, citations, summaries, and question answering.",
+      "category": "ai",
+      "amountRaised": "$10B+ valuation",
+      "roundLabel": "Private valuation",
+      "websiteUrl": "https://www.perplexity.ai",
+      "sourceUrls": [
+        "https://www.perplexity.ai"
+      ],
+      "sourceNotes": [
+        "Known for AI search and cited answers across general web research.",
+        "Good fork direction: build a narrower research assistant for one regulated or repetitive research workflow with better source defaults."
+      ]
+    },
+    {
+      "name": "Airbnb",
+      "description": "Marketplace for short-term stays, guest booking, host tools, payments, reviews, and travel inventory.",
+      "category": "marketplace",
+      "amountRaised": "$80B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://www.airbnb.com",
+      "sourceUrls": [
+        "https://www.airbnb.com"
+      ],
+      "sourceNotes": [
+        "Known for matching hosts and guests, reviews, booking flows, availability, payments, and trust infrastructure.",
+        "Good fork direction: use the marketplace pattern for constrained local inventory where trust, scheduling, and repeat usage matter."
+      ]
+    },
+    {
+      "name": "Zillow",
+      "description": "Real estate marketplace and data platform for home search, listings, agent discovery, rentals, and property information.",
+      "category": "marketplace",
+      "amountRaised": "$15B+ market cap",
+      "roundLabel": "Public company",
+      "websiteUrl": "https://www.zillow.com",
+      "sourceUrls": [
+        "https://www.zillow.com"
+      ],
+      "sourceNotes": [
+        "Known for property listings, search filters, maps, estimates, agent leads, rental discovery, and real-estate data.",
+        "Good fork direction: create niche property discovery marketplaces around one buyer intent, property type, or transaction workflow."
+      ]
+    }
+  ]
+}
