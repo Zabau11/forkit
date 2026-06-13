@@ -5,11 +5,16 @@ import {
   ArrowLeft,
   ArrowRight,
   Banknote,
+  BadgeDollarSign,
   CheckCircle2,
   ExternalLink,
   Layers3,
+  Lightbulb,
+  Megaphone,
   Route,
   Sparkles,
+  Target,
+  Wrench,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -52,10 +57,18 @@ export default async function StartupPage({ params }: StartupPageProps) {
     notFound();
   }
 
+  const forkIdeas = [...startup.forkIdeas].sort(
+    (a, b) =>
+      (b.viabilityScore ?? 0) - (a.viabilityScore ?? 0) ||
+      a.sortOrder - b.sortOrder,
+  );
+  const bestIdea = forkIdeas[0] ?? null;
+  const bestScore = bestIdea?.viabilityScore ?? null;
+
   const highlights = [
     {
-      label: "source pattern",
-      value: startup.roundLabel,
+      label: "source signal",
+      value: `${startup.amountRaised} · ${startup.roundLabel}`,
       icon: Sparkles,
     },
     {
@@ -178,71 +191,169 @@ export default async function StartupPage({ params }: StartupPageProps) {
       </section>
 
       <section className="grid border-b border-border lg:grid-cols-[320px_minmax(0,1fr)]">
-        <div className="border-b border-border px-6 py-8 lg:border-b-0 lg:border-r">
-          <div className="font-mono text-[11px] uppercase text-muted-foreground">
-            starter stack
-          </div>
-          <div className="mt-5 space-y-3">
-            {startup.starterStack.map((item) => (
-              <div key={item} className="flex items-start gap-3">
-                <CheckCircle2
-                  className="mt-0.5 size-4 shrink-0 text-primary"
-                  aria-hidden="true"
-                />
-                <span className="text-sm leading-6">{item}</span>
+        <aside className="border-b border-border px-6 py-8 lg:border-b-0 lg:border-r">
+          <div className="sticky top-6 space-y-8">
+            {bestIdea ? (
+              <div>
+                <div className="font-mono text-[11px] uppercase tracking-[1.5px] text-muted-foreground">
+                  best first fork
+                </div>
+                <div className="mt-4 border-l border-foreground pl-4">
+                  <div className="text-lg font-medium leading-6">
+                    {bestIdea.title}
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                    {bestIdea.niche}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {bestScore ? (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full border border-border px-2.5 py-1 font-mono text-[10px] font-normal text-muted-foreground"
+                      >
+                        {bestScore}/5 viability
+                      </Badge>
+                    ) : null}
+                    <Badge
+                      variant="outline"
+                      className="rounded-full px-2.5 py-1 font-mono text-[10px] font-normal text-muted-foreground"
+                    >
+                      rank #1
+                    </Badge>
+                  </div>
+                </div>
               </div>
-            ))}
+            ) : null}
+
+            <div className="border-t border-border pt-8">
+              <div className="font-mono text-[11px] uppercase tracking-[1.5px] text-muted-foreground">
+                starter stack
+              </div>
+              <div className="mt-5 space-y-3">
+                {startup.starterStack.map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <CheckCircle2
+                      className="mt-0.5 size-4 shrink-0 text-primary"
+                      aria-hidden="true"
+                    />
+                    <span className="text-sm leading-6">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        </aside>
 
         <div className="px-6 py-8">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
               <div className="font-mono text-[11px] uppercase text-muted-foreground">
-                all fork ideas
+                ranked fork ideas
               </div>
               <h2 className="mt-2 text-2xl font-semibold leading-tight">
-                Pick a niche with repeated, expensive pain.
+                Pick the wedge with the clearest buyer pain.
               </h2>
             </div>
             <div className="hidden items-center gap-2 font-mono text-[11px] text-muted-foreground sm:flex">
               <Layers3 className="size-3" aria-hidden="true" />
-              {startup.forkIdeas.length} ideas
+              {forkIdeas.length} ideas
             </div>
           </div>
 
+          {bestIdea ? (
+            <div className="mb-4 grid gap-4 rounded-lg border border-border bg-secondary/50 p-5 md:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="min-w-0">
+                <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                  recommended starting point
+                </div>
+                <h3 className="mt-2 text-2xl font-medium leading-tight">
+                  {bestIdea.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {bestIdea.problem ?? bestIdea.whyItWorks}
+                </p>
+              </div>
+              <div className="border-t border-border pt-4 md:border-l md:border-t-0 md:pl-5 md:pt-0">
+                <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                  why this first
+                </div>
+                <p className="mt-2 text-sm leading-6">
+                  {bestIdea.whyItWorks}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
           <div className="grid gap-3 xl:grid-cols-2">
-            {startup.forkIdeas.map((idea) => (
+            {forkIdeas.map((idea, index) => (
               <Card
                 key={idea.id}
-                className="min-h-[120px] gap-0 rounded-lg border-border/80 py-0 shadow-none"
+                className="min-h-[360px] gap-0 rounded-lg border-border/80 py-0 shadow-none"
               >
                 <CardHeader className="gap-3 p-7 pb-0">
                   <div className="flex items-start justify-between gap-4">
-                    <CardTitle className="text-lg font-medium leading-6">
-                      {idea.title}
-                    </CardTitle>
-                    <Badge
-                      variant="outline"
-                      className="shrink-0 rounded-full px-2.5 py-0.5 font-mono text-[10px] font-normal text-muted-foreground"
-                    >
-                      {idea.niche}
-                    </Badge>
+                    <div className="min-w-0">
+                      <div className="mb-2 font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                        #{index + 1} fork idea
+                      </div>
+                      <CardTitle className="text-xl font-medium leading-7">
+                        {idea.title}
+                      </CardTitle>
+                    </div>
+                    {idea.viabilityScore ? (
+                      <div className="shrink-0 rounded-full border border-border bg-secondary px-3 py-1 text-right font-mono text-[11px] text-muted-foreground">
+                        {idea.viabilityScore}/5
+                      </div>
+                    ) : null}
                   </div>
+                  <Badge
+                    variant="outline"
+                    className="w-fit max-w-full whitespace-normal rounded-full px-2.5 py-1 text-left font-mono text-[10px] font-normal leading-4 text-muted-foreground"
+                  >
+                    {idea.niche}
+                  </Badge>
                 </CardHeader>
 
                 <CardContent className="space-y-5 p-7 pt-5">
-                  <ForkNote label="why" value={idea.whyItWorks} />
-                  <ForkNote label="mvp" value={idea.mvp} />
-                  <ForkNote label="gtm" value={idea.goToMarket} />
-                  <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
-                    <span className="font-mono text-[10px] uppercase text-muted-foreground">
-                      pricing
-                    </span>
-                    <span className="text-right text-sm leading-6">
-                      {idea.pricing}
-                    </span>
-                  </div>
+                  {idea.problem ? (
+                    <ForkNote icon={Target} label="problem" value={idea.problem} />
+                  ) : null}
+                  <ForkNote
+                    icon={Lightbulb}
+                    label="why it works"
+                    value={idea.whyItWorks}
+                  />
+                  <ForkNote icon={Wrench} label="mvp" value={idea.mvp} />
+                  <ForkNote
+                    icon={Megaphone}
+                    label="go to market"
+                    value={idea.goToMarket}
+                  />
+                  <ForkNote
+                    icon={BadgeDollarSign}
+                    label="pricing"
+                    value={idea.pricing}
+                  />
+                  {idea.evidence?.length ? (
+                    <div className="border-t border-border pt-5">
+                      <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                        evidence
+                      </div>
+                      <div className="mt-3 space-y-2">
+                        {idea.evidence.slice(0, 2).map((evidence, evidenceIndex) => (
+                          <p
+                            key={`${idea.id}-${evidence.source}-${evidenceIndex}`}
+                            className="text-xs leading-5 text-muted-foreground"
+                          >
+                            <span className="text-foreground">
+                              {evidence.source}
+                            </span>
+                            : {evidence.snippet}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                 </CardContent>
               </Card>
             ))}
@@ -284,13 +395,26 @@ export default async function StartupPage({ params }: StartupPageProps) {
   );
 }
 
-function ForkNote({ label, value }: { label: string; value: string }) {
+function ForkNote({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Lightbulb;
+  label: string;
+  value: string;
+}) {
   return (
-    <div>
-      <div className="font-mono text-[10px] uppercase text-muted-foreground">
-        {label}
+    <div className="grid gap-3 sm:grid-cols-[24px_minmax(0,1fr)]">
+      <div className="flex size-6 items-center justify-center rounded-md border border-border bg-secondary text-primary">
+        <Icon className="size-3.5" aria-hidden="true" />
       </div>
-      <p className="mt-1 text-sm leading-6 text-card-foreground">{value}</p>
+      <div>
+        <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+          {label}
+        </div>
+        <p className="mt-1 text-sm leading-6 text-card-foreground">{value}</p>
+      </div>
     </div>
   );
 }
