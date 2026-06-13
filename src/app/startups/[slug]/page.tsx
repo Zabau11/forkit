@@ -5,22 +5,22 @@ import {
   ArrowLeft,
   ArrowRight,
   Banknote,
-  BadgeDollarSign,
   CheckCircle2,
   ExternalLink,
   Layers3,
-  Lightbulb,
-  Megaphone,
   Route,
   Sparkles,
-  Target,
-  Wrench,
 } from "lucide-react";
 
+import { IdeaPromptActions } from "@/components/idea-prompt-actions";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getStartupDetailBySlug } from "@/lib/supabase";
+import {
+  getStartupDetailBySlug,
+  type StartupDetail,
+  type StartupDetailForkIdea,
+} from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -100,7 +100,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
         </div>
         <div className="flex items-center gap-5">
           <Link
-            href="/#startups"
+            href="/startups"
             className="text-[13px] text-muted-foreground transition-colors hover:text-foreground"
           >
             startups
@@ -261,7 +261,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
           </div>
 
           {bestIdea ? (
-            <div className="mb-4 grid gap-4 rounded-lg border border-border bg-secondary/50 p-5 md:grid-cols-[minmax(0,1fr)_220px]">
+            <div className="mb-4 grid gap-4 rounded-lg border border-border bg-secondary/50 p-5 md:grid-cols-[minmax(0,1fr)_240px]">
               <div className="min-w-0">
                 <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
                   recommended starting point
@@ -270,16 +270,22 @@ export default async function StartupPage({ params }: StartupPageProps) {
                   {bestIdea.title}
                 </h3>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {bestIdea.problem ?? bestIdea.whyItWorks}
+                  {createShortDescription(bestIdea)}
                 </p>
               </div>
               <div className="border-t border-border pt-4 md:border-l md:border-t-0 md:pl-5 md:pt-0">
                 <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
-                  why this first
+                  explore next
                 </div>
-                <p className="mt-2 text-sm leading-6">
-                  {bestIdea.whyItWorks}
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Copy the full prompt, open Claude, and paste it in to unpack
+                  the business.
                 </p>
+                <div className="mt-4">
+                  <IdeaPromptActions
+                    prompt={createClaudePrompt(startup, bestIdea)}
+                  />
+                </div>
               </div>
             </div>
           ) : null}
@@ -288,7 +294,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
             {forkIdeas.map((idea, index) => (
               <Card
                 key={idea.id}
-                className="min-h-[360px] gap-0 rounded-lg border-border/80 py-0 shadow-none"
+                className="min-h-[230px] gap-0 rounded-lg border-border/80 py-0 shadow-none"
               >
                 <CardHeader className="gap-3 p-7 pb-0">
                   <div className="flex items-start justify-between gap-4">
@@ -315,45 +321,29 @@ export default async function StartupPage({ params }: StartupPageProps) {
                 </CardHeader>
 
                 <CardContent className="space-y-5 p-7 pt-5">
-                  {idea.problem ? (
-                    <ForkNote icon={Target} label="problem" value={idea.problem} />
-                  ) : null}
-                  <ForkNote
-                    icon={Lightbulb}
-                    label="why it works"
-                    value={idea.whyItWorks}
-                  />
-                  <ForkNote icon={Wrench} label="mvp" value={idea.mvp} />
-                  <ForkNote
-                    icon={Megaphone}
-                    label="go to market"
-                    value={idea.goToMarket}
-                  />
-                  <ForkNote
-                    icon={BadgeDollarSign}
-                    label="pricing"
-                    value={idea.pricing}
-                  />
-                  {idea.evidence?.length ? (
-                    <div className="border-t border-border pt-5">
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    {createShortDescription(idea)}
+                  </p>
+                  <div className="grid gap-3 border-t border-border pt-4 sm:grid-cols-2">
+                    <div>
                       <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
-                        evidence
+                        pricing
                       </div>
-                      <div className="mt-3 space-y-2">
-                        {idea.evidence.slice(0, 2).map((evidence, evidenceIndex) => (
-                          <p
-                            key={`${idea.id}-${evidence.source}-${evidenceIndex}`}
-                            className="text-xs leading-5 text-muted-foreground"
-                          >
-                            <span className="text-foreground">
-                              {evidence.source}
-                            </span>
-                            : {evidence.snippet}
-                          </p>
-                        ))}
+                      <p className="mt-1 text-sm leading-6">
+                        {createShortText(idea.pricing)}
+                      </p>
+                    </div>
+                    <div>
+                      <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                        next step
+                      </div>
+                      <div className="mt-2">
+                        <IdeaPromptActions
+                          prompt={createClaudePrompt(startup, idea)}
+                        />
                       </div>
                     </div>
-                  ) : null}
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -365,12 +355,12 @@ export default async function StartupPage({ params }: StartupPageProps) {
         <div>
           <div className="text-sm font-medium">Want another startup?</div>
           <div className="mt-1 text-xs leading-6 text-muted-foreground">
-            Browse the landing page list or suggest the next one.
+            Browse the startup library or suggest the next one.
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
-            href="/#startups"
+            href="/startups"
             className={cn(
               buttonVariants({ variant: "secondary", size: "sm" }),
               "font-mono text-xs",
@@ -395,26 +385,68 @@ export default async function StartupPage({ params }: StartupPageProps) {
   );
 }
 
-function ForkNote({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof Lightbulb;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="grid gap-3 sm:grid-cols-[24px_minmax(0,1fr)]">
-      <div className="flex size-6 items-center justify-center rounded-md border border-border bg-secondary text-primary">
-        <Icon className="size-3.5" aria-hidden="true" />
-      </div>
-      <div>
-        <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
-          {label}
-        </div>
-        <p className="mt-1 text-sm leading-6 text-card-foreground">{value}</p>
-      </div>
-    </div>
-  );
+function createShortDescription(idea: StartupDetailForkIdea): string {
+  return createShortText(idea.problem ?? idea.whyItWorks);
+}
+
+function createShortText(value: string): string {
+  const firstSentence = value.match(/.*?[.!?](?:\s|$)/)?.[0]?.trim() ?? value;
+
+  if (firstSentence.length <= 150) {
+    return firstSentence;
+  }
+
+  return `${firstSentence.slice(0, 147).trim()}...`;
+}
+
+function createClaudePrompt(
+  startup: StartupDetail,
+  idea: StartupDetailForkIdea,
+): string {
+  const evidence = idea.evidence?.length
+    ? idea.evidence
+        .map((item) => `- ${item.source}: ${item.snippet}`)
+        .join("\n")
+    : "- No external evidence snippets provided.";
+
+  return `I want to explore this startup fork idea deeply.
+
+Source company: ${startup.name}
+Source company description: ${startup.description}
+Source pattern: ${startup.pattern}
+Funding / scale signal: ${startup.amountRaised} (${startup.roundLabel})
+
+Fork idea: ${idea.title}
+Target niche: ${idea.niche}
+Viability score: ${idea.viabilityScore ?? "not scored"}/5
+
+Problem:
+${idea.problem ?? "Not provided."}
+
+Why it works:
+${idea.whyItWorks}
+
+MVP:
+${idea.mvp}
+
+Go-to-market:
+${idea.goToMarket}
+
+Pricing:
+${idea.pricing}
+
+Evidence:
+${evidence}
+
+Help me evaluate whether this is viable for a solo founder. Break it down into:
+1. the exact target customer and buyer persona
+2. the painful workflow this replaces
+3. the smallest useful MVP
+4. the first 10 customer acquisition plan
+5. realistic pricing and packaging
+6. risks and reasons this might fail
+7. a 30-day build plan
+8. what I should validate before writing code
+
+Be concrete, skeptical, and practical.`;
 }

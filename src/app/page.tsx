@@ -1,28 +1,16 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  Building2,
-  ExternalLink,
-  Search,
-  SlidersHorizontal,
-  X,
-} from "lucide-react";
+import { ArrowRight, Building2, ExternalLink } from "lucide-react";
 
-import { StartupCard } from "@/components/startup-card";
+import { StartupBrowser } from "@/components/startup-browser";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
-  categoryFilters,
   getLandingPageData,
   normalizeCategory,
   normalizeSearchQuery,
   normalizeStartupSort,
-  startupSortOptions,
-  type CategoryFilter,
-  type StartupSort,
 } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
@@ -44,40 +32,6 @@ const heroTags = [
   "niche markets",
 ];
 
-const sortLabels: Record<StartupSort, string> = {
-  latest: "latest",
-  name: "A-Z",
-  ideas: "most ideas",
-};
-
-function createBrowseHref({
-  category,
-  query,
-  sort,
-}: {
-  category: CategoryFilter;
-  query: string;
-  sort: StartupSort;
-}) {
-  const params = new URLSearchParams();
-
-  if (category !== "all") {
-    params.set("category", category);
-  }
-
-  if (query) {
-    params.set("q", query);
-  }
-
-  if (sort !== "latest") {
-    params.set("sort", sort);
-  }
-
-  const queryString = params.toString();
-
-  return queryString ? `/?${queryString}#startups` : "/#startups";
-}
-
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const activeCategory = normalizeCategory(params.category);
@@ -89,8 +43,6 @@ export default async function Home({ searchParams }: HomeProps) {
     sort: activeSort,
   });
   const featuredStartup = data.startups[0] ?? null;
-  const hasActiveFilters =
-    activeCategory !== "all" || activeQuery || activeSort !== "latest";
 
   const stats = [
     {
@@ -115,13 +67,13 @@ export default async function Home({ searchParams }: HomeProps) {
         </Link>
         <div className="flex items-center gap-5">
           <Link
-            href="#startups"
+            href="/startups"
             className="text-[13px] text-muted-foreground transition-colors hover:text-foreground"
           >
             startups
           </Link>
           <Link
-            href="#startups"
+            href="/startups"
             className="hidden text-[13px] text-muted-foreground transition-colors hover:text-foreground sm:inline"
           >
             all forks
@@ -267,137 +219,21 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <section id="startups" className="px-6 py-6">
-        <div className="mb-5 grid gap-4 border-b border-border pb-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-          <div>
-            <div className="font-mono text-[11px] uppercase text-muted-foreground">
-              browse startups
-            </div>
-            <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-              <form action="/" className="relative flex-1">
-                <input type="hidden" name="category" value={activeCategory} />
-                <input type="hidden" name="sort" value={activeSort} />
-                <Search
-                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <Input
-                  name="q"
-                  defaultValue={activeQuery}
-                  placeholder="Search companies, niches, markets..."
-                  className="h-11 rounded-lg pl-9 pr-11 text-[14px]"
-                />
-                {activeQuery ? (
-                  <Link
-                    href={createBrowseHref({
-                      category: activeCategory,
-                      query: "",
-                      sort: activeSort,
-                    })}
-                    aria-label="Clear search"
-                    className="absolute right-3 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <X className="size-4" aria-hidden="true" />
-                  </Link>
-                ) : null}
-              </form>
-
-              {hasActiveFilters ? (
-                <Link
-                  href="/#startups"
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "sm" }),
-                    "h-11 shrink-0 rounded-lg font-mono text-[11px]",
-                  )}
-                >
-                  clear filters
-                </Link>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3 lg:items-end">
-            <div className="flex flex-wrap gap-1.5">
-              {categoryFilters.map((filter) => (
-                <Link
-                  key={filter}
-                  href={createBrowseHref({
-                    category: filter,
-                    query: activeQuery,
-                    sort: activeSort,
-                  })}
-                  className={cn(
-                    "rounded-full border px-3 py-1 font-mono text-[11px] transition-colors",
-                    activeCategory === filter
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",
-                  )}
-                >
-                  {filter}
-                </Link>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5">
-              <div className="mr-1 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase text-muted-foreground">
-                <SlidersHorizontal className="size-3" aria-hidden="true" />
-                sort
-              </div>
-              {startupSortOptions.map((sort) => (
-                <Link
-                  key={sort}
-                  href={createBrowseHref({
-                    category: activeCategory,
-                    query: activeQuery,
-                    sort,
-                  })}
-                  className={cn(
-                    "rounded-full border px-3 py-1 font-mono text-[11px] transition-colors",
-                    activeSort === sort
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",
-                  )}
-                >
-                  {sortLabels[sort]}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {data.error ? (
           <div className="mb-3 rounded-lg border border-border bg-secondary px-4 py-3 text-xs text-muted-foreground">
             {data.error}
           </div>
         ) : null}
 
-        <div className="mb-3 flex items-center justify-between gap-4">
-          <div className="text-sm text-muted-foreground">
-            Showing{" "}
-            <span className="font-medium text-foreground">
-              {data.startups.length}
-            </span>{" "}
-            {data.startups.length === 1 ? "startup" : "startups"}
-          </div>
-          {activeQuery ? (
-            <div className="hidden max-w-[360px] truncate font-mono text-[11px] text-muted-foreground sm:block">
-              query: {activeQuery}
-            </div>
-          ) : null}
-        </div>
-
-        <div className="grid gap-3 lg:grid-cols-2">
-          {data.startups.map((startup) => (
-            <div key={startup.id} id={startup.id}>
-              <StartupCard startup={startup} />
-            </div>
-          ))}
-        </div>
-
-        {!data.startups.length ? (
-          <div className="rounded-lg border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
-            No startups found for this search.
-          </div>
-        ) : null}
+        <StartupBrowser
+          startups={data.startups}
+          activeCategory={activeCategory}
+          activeQuery={activeQuery}
+          activeSort={activeSort}
+          actionPath="/"
+          browsePath="/#startups"
+          heading="latest startups"
+        />
 
         <section
           id="suggest"
