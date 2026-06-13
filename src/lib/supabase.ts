@@ -4,6 +4,10 @@ export const categoryFilters = ["all", "saas", "ai", "marketplace"] as const;
 
 export type CategoryFilter = (typeof categoryFilters)[number];
 
+export const startupSortOptions = ["latest", "name", "ideas"] as const;
+
+export type StartupSort = (typeof startupSortOptions)[number];
+
 export type ForkIdea = {
   id: string;
   title: string;
@@ -64,6 +68,12 @@ export type LandingPageData = {
   error: string | null;
 };
 
+export type LandingPageFilters = {
+  category: CategoryFilter;
+  query: string;
+  sort: StartupSort;
+};
+
 type StartupRow = {
   id: string;
   slug?: string | null;
@@ -118,6 +128,18 @@ export function normalizeCategory(value: string | undefined): CategoryFilter {
   return "all";
 }
 
+export function normalizeSearchQuery(value: string | undefined): string {
+  return typeof value === "string" ? value.trim().slice(0, 80) : "";
+}
+
+export function normalizeStartupSort(value: string | undefined): StartupSort {
+  if (value && startupSortOptions.includes(value as StartupSort)) {
+    return value as StartupSort;
+  }
+
+  return "latest";
+}
+
 export function createSupabaseServerClient() {
   if (!supabaseUrl || !supabaseAnonKey) {
     return null;
@@ -131,9 +153,11 @@ export function createSupabaseServerClient() {
   });
 }
 
-export async function getLandingPageData(
-  category: CategoryFilter,
-): Promise<LandingPageData> {
+export async function getLandingPageData({
+  category,
+  query,
+  sort,
+}: LandingPageFilters): Promise<LandingPageData> {
   const supabase = createSupabaseServerClient();
 
   if (!supabase) {
@@ -173,7 +197,7 @@ export async function getLandingPageData(
     .eq("is_published", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })
-    .limit(6);
+    .limit(120);
 
   if (category !== "all") {
     startupQuery = startupQuery.eq("category", category);
@@ -204,7 +228,10 @@ export async function getLandingPageData(
 
   const startupRows = (startupResult.data ?? []) as unknown as StartupRow[];
   const cadenceRow = cadenceResult.data as LandingSettingRow | null;
-  const startups = startupRows.map(mapStartupRow);
+  const startups = sortStartups(
+    filterStartups(startupRows.map(mapStartupRow), query),
+    sort,
+  );
 
   return {
     startups,
@@ -215,6 +242,46 @@ export async function getLandingPageData(
     },
     error: firstError?.message ?? null,
   };
+}
+
+function filterStartups(startups: Startup[], query: string): Startup[] {
+  if (!query) {
+    return startups;
+  }
+
+  const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
+
+  return startups.filter((startup) => {
+    const searchableText = [
+      startup.name,
+      startup.description,
+      startup.category,
+      startup.roundLabel,
+      startup.amountRaised,
+      startup.pattern ?? "",
+      ...startup.forkIdeas.flatMap((idea) => [idea.title, idea.niche]),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return tokens.every((token) => searchableText.includes(token));
+  });
+}
+
+function sortStartups(startups: Startup[], sort: StartupSort): Startup[] {
+  return [...startups].sort((a, b) => {
+    if (sort === "name") {
+      return a.name.localeCompare(b.name);
+    }
+
+    if (sort === "ideas") {
+      return (
+        b.forkIdeas.length - a.forkIdeas.length || a.sortOrder - b.sortOrder
+      );
+    }
+
+    return a.sortOrder - b.sortOrder || b.createdAt.localeCompare(a.createdAt);
+  });
 }
 
 function mapStartupRow(row: StartupRow): Startup {
