@@ -9,7 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "generate:review": "node scripts/generate-startup-review.mjs",
-    "import:approved": "node scripts/import-approved-review.mjs"
+    "import:pending": "node scripts/import-approved-review.mjs --review-status pending",
+    "import:approved": "node scripts/import-approved-review.mjs --review-status approved"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.107.0",

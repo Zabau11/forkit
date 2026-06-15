@@ -59,9 +59,86 @@ export async function updateReviewIdea(formData: FormData) {
     throw new Error(error.message);
   }
 
+  if (status === "approved" && formData.get("isPublished") === "on") {
+    await publishIdeaStartup(ideaId);
+  }
+
   revalidatePath("/review");
   revalidatePath("/");
   revalidatePath("/startups");
+}
+
+export async function quickReviewIdea(formData: FormData) {
+  if (!(await isReviewAdminAuthenticated())) {
+    redirect("/review");
+  }
+
+  const ideaId = getRequiredString(formData, "ideaId");
+  const action = getRequiredString(formData, "action");
+  const supabase = createReviewAdminClient();
+
+  const updates =
+    action === "approve"
+      ? {
+          review_status: "approved",
+          is_published: true,
+          reviewed_at: new Date().toISOString(),
+        }
+      : action === "reject"
+        ? {
+            review_status: "rejected",
+            is_published: false,
+            reviewed_at: new Date().toISOString(),
+          }
+        : action === "hide"
+          ? {
+              is_published: false,
+              reviewed_at: new Date().toISOString(),
+            }
+          : null;
+
+  if (!updates) {
+    throw new Error("Invalid quick review action.");
+  }
+
+  const { error } = await supabase
+    .from("startup_fork_ideas")
+    .update(updates)
+    .eq("id", ideaId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (action === "approve") {
+    await publishIdeaStartup(ideaId);
+  }
+
+  revalidatePath("/review");
+  revalidatePath("/");
+  revalidatePath("/startups");
+}
+
+async function publishIdeaStartup(ideaId: string) {
+  const supabase = createReviewAdminClient();
+  const { data, error: lookupError } = await supabase
+    .from("startup_fork_ideas")
+    .select("startup_id")
+    .eq("id", ideaId)
+    .single();
+
+  if (lookupError) {
+    throw new Error(lookupError.message);
+  }
+
+  const { error: updateError } = await supabase
+    .from("startups")
+    .update({ is_published: true })
+    .eq("id", data.startup_id);
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
 }
 
 function getRequiredString(formData: FormData, key: string) {

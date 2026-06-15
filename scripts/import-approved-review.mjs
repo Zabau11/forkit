@@ -4,6 +4,38 @@ import { createClient } from "@supabase/supabase-js";
 
 const DEFAULT_REVIEW_FILE = "generated/startups-review.json";
 const VALID_CATEGORIES = new Set(["saas", "ai", "marketplace"]);
+const VALID_REVIEW_STATUSES = new Set(["pending", "approved"]);
+
+function parseArgs(argv) {
+  const args = {
+    reviewFile: DEFAULT_REVIEW_FILE,
+    reviewStatus: "approved",
+  };
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    const next = argv[index + 1];
+
+    if (arg === "--review-status" && next) {
+      if (!VALID_REVIEW_STATUSES.has(next)) {
+        throw new Error("--review-status must be pending or approved.");
+      }
+
+      args.reviewStatus = next;
+      index += 1;
+      continue;
+    }
+
+    if (!arg.startsWith("--") && args.reviewFile === DEFAULT_REVIEW_FILE) {
+      args.reviewFile = arg;
+      continue;
+    }
+
+    throw new Error(`Unknown or incomplete argument: ${arg}`);
+  }
+
+  return args;
+}
 
 function loadLocalEnv() {
   try {
@@ -98,7 +130,7 @@ function getOptionalViabilityScore(value) {
   return value;
 }
 
-function normalizeReviewData(data) {
+function normalizeReviewData(data, importReviewStatus) {
   if (!data || !Array.isArray(data.startups)) {
     throw new Error("Review file must contain a top-level startups array.");
   }
@@ -119,8 +151,12 @@ function normalizeReviewData(data) {
     }
 
     const ideas = Array.isArray(startup.ideas) ? startup.ideas : [];
-    const approvedIdeas = ideas
-      .filter((idea) => idea.status === "approved")
+    const importableIdeas = ideas
+      .filter((idea) =>
+        importReviewStatus === "approved"
+          ? idea.status === "approved"
+          : idea.status !== "rejected",
+      )
       .map((idea, ideaIndex) => ({
         title: getString(
           idea.title,
@@ -131,6 +167,7 @@ function normalizeReviewData(data) {
           `startups[${startupIndex}].ideas[${ideaIndex}].niche`,
         ),
         sort_order: getOptionalNumber(idea.sortOrder, (ideaIndex + 1) * 10),
+        sourceIdea: idea,
       }));
 
     return {
@@ -162,16 +199,14 @@ function normalizeReviewData(data) {
         target_customer: getOptionalString(startup.targetCustomer),
         starter_stack: getOptionalStringArray(startup.starterStack),
         enriched_at: startup.sourceSummary ? new Date().toISOString() : null,
-        is_published: true,
+        is_published: importReviewStatus === "approved",
       },
       slug: slugify(name),
-      approvedIdeas: approvedIdeas.map((idea, ideaIndex) => {
-        const sourceIdea = ideas.filter((item) => item.status === "approved")[
-          ideaIndex
-        ];
-
+      importableIdeas: importableIdeas.map((idea) => {
+        const sourceIdea = idea.sourceIdea;
         return {
           ...idea,
+          sourceIdea: undefined,
           problem: getOptionalString(sourceIdea.problem),
           why_it_works: getOptionalString(sourceIdea.whyItWorks),
           mvp: getOptionalString(sourceIdea.mvp),
@@ -183,6 +218,10 @@ function normalizeReviewData(data) {
           generated_at: sourceIdea.generationModel
             ? new Date().toISOString()
             : null,
+          review_status: importReviewStatus,
+          is_published: importReviewStatus === "approved",
+          reviewed_at:
+            importReviewStatus === "approved" ? new Date().toISOString() : null,
         };
       }),
     };
@@ -192,7 +231,8 @@ function normalizeReviewData(data) {
 async function main() {
   loadLocalEnv();
 
-  const reviewFile = process.argv[2] ?? DEFAULT_REVIEW_FILE;
+  const args = parseArgs(process.argv.slice(2));
+  const reviewFile = args.reviewFile;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -203,7 +243,7 @@ async function main() {
   }
 
   const reviewText = await readFile(reviewFile, "utf8");
-  const reviewData = normalizeReviewData(JSON.parse(reviewText));
+  const reviewData = normalizeReviewData(JSON.parse(reviewText), args.reviewStatus);
 
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: {
@@ -216,7 +256,7 @@ async function main() {
   let importedIdeaCount = 0;
 
   for (const item of reviewData) {
-    if (!item.approvedIdeas.length) {
+    if (!item.importableIdeas.length) {
       continue;
     }
 
@@ -257,7 +297,7 @@ async function main() {
       .eq("startup_id", startup.id)
       .in(
         "title",
-        item.approvedIdeas.map((idea) => idea.title),
+        item.importableIdeas.map((idea) => idea.title),
       );
 
     if (existingIdeasError) {
@@ -270,7 +310,7 @@ async function main() {
       (existingIdeas ?? []).map((idea) => idea.title),
     );
 
-    const forkIdeaRows = item.approvedIdeas
+    const forkIdeaRows = item.importableIdeas
       .filter((idea) => !existingIdeaTitles.has(idea.title))
       .map((idea) => ({
         startup_id: startup.id,
@@ -286,6 +326,9 @@ async function main() {
         evidence: idea.evidence,
         generation_model: idea.generation_model,
         generated_at: idea.generated_at,
+        review_status: idea.review_status,
+        is_published: idea.is_published,
+        reviewed_at: idea.reviewed_at,
       }));
 
     if (!forkIdeaRows.length) {
@@ -306,7 +349,7 @@ async function main() {
   }
 
   console.log(
-    `Imported ${importedStartupCount} startups and ${importedIdeaCount} approved ideas.`,
+    `Imported ${importedStartupCount} startups and ${importedIdeaCount} ${args.reviewStatus} ideas.`,
   );
 }
 

@@ -195,8 +195,8 @@ export async function getLandingPageData({
       `,
     )
     .eq("is_published", true)
-    .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })
+    .order("sort_order", { ascending: true })
     .limit(120);
 
   if (category !== "all") {
@@ -280,7 +280,7 @@ function sortStartups(startups: Startup[], sort: StartupSort): Startup[] {
       );
     }
 
-    return a.sortOrder - b.sortOrder || b.createdAt.localeCompare(a.createdAt);
+    return b.createdAt.localeCompare(a.createdAt) || a.sortOrder - b.sortOrder;
   });
 }
 

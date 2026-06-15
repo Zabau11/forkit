@@ -5,6 +5,7 @@ import { Lock, LogOut, ShieldCheck } from "lucide-react";
 import {
   loginReviewAdmin,
   logoutReviewAdmin,
+  quickReviewIdea,
   updateReviewIdea,
 } from "@/app/review/actions";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +41,9 @@ type ReviewPageProps = {
 
 export default async function ReviewPage({ searchParams }: ReviewPageProps) {
   const params = await searchParams;
-  const status = normalizeReviewStatusFilter(params.status);
+  const status = params.status
+    ? normalizeReviewStatusFilter(params.status)
+    : "pending";
 
   if (!isReviewConfigured()) {
     return (
@@ -143,7 +146,7 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
           {(["all", ...reviewStatuses] as ReviewStatusFilter[]).map((item) => (
             <Link
               key={item}
-              href={item === "all" ? "/review" : `/review?status=${item}`}
+              href={item === "pending" ? "/review" : `/review?status=${item}`}
               className={cn(
                 "rounded-full border px-3 py-1 font-mono text-[11px] transition-colors",
                 status === item
@@ -178,6 +181,30 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
         ) : null}
       </section>
     </ReviewShell>
+  );
+}
+
+function QuickActionButton({
+  action,
+  label,
+  variant = "outline",
+}: {
+  action: "approve" | "reject" | "hide";
+  label: string;
+  variant?: "default" | "outline" | "secondary";
+}) {
+  return (
+    <Button
+      type="submit"
+      name="action"
+      value={action}
+      formAction={quickReviewIdea}
+      variant={variant}
+      size="sm"
+      className="w-full font-mono text-[11px]"
+    >
+      {label}
+    </Button>
   );
 }
 
@@ -305,6 +332,18 @@ function ReviewIdeaCard({ idea }: { idea: ReviewIdea }) {
         </label>
 
         <div className="grid gap-2">
+          <QuickActionButton
+            action="approve"
+            label="approve + publish"
+            variant="default"
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <QuickActionButton action="reject" label="reject" />
+            <QuickActionButton action="hide" label="hide" />
+          </div>
+        </div>
+
+        <div className="grid gap-2 border-t border-border pt-4">
           <label className="flex items-center gap-2 text-sm">
             <input
               name="isPublished"
