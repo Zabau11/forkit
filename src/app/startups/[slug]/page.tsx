@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { IdeaPromptActions } from "@/components/idea-prompt-actions";
+import { StartupLogo } from "@/components/startup-logo";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -135,10 +136,18 @@ export default async function StartupPage({ params }: StartupPageProps) {
             </Badge>
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-end md:gap-6">
-            <h1 className="max-w-4xl text-[48px] font-semibold leading-[1] md:text-[84px]">
-              {startup.name}
-            </h1>
+          <div className="mt-5 flex flex-col gap-4 md:flex-row md:items-end md:gap-6">
+            <div className="flex min-w-0 items-center gap-4">
+              <StartupLogo
+                slug={startup.slug}
+                name={startup.name}
+                size="lg"
+                className="hidden sm:flex"
+              />
+              <h1 className="min-w-0 text-[48px] font-semibold leading-[1] md:text-[84px]">
+                {startup.name}
+              </h1>
+            </div>
             <div className="text-[30px] font-medium leading-none text-muted-foreground/80 md:pb-2 md:text-[44px]">
               {startup.amountRaised}
             </div>

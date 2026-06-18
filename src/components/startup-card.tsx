@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
+import { StartupLogo } from "@/components/startup-logo";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -19,18 +20,21 @@ export function StartupCard({ startup }: StartupCardProps) {
   return (
     <Link
       href={`/startups/${startup.slug}`}
-      className="group block h-full rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+      className="group animate-enter block h-full rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
       aria-label={`View all ${startup.name} fork ideas`}
     >
-      <Card className="flex h-full gap-0 rounded-lg border-border/80 py-0 shadow-none transition-colors group-hover:border-foreground/40 group-hover:bg-secondary/60">
+      <Card className="flex h-full gap-0 rounded-lg border-border/80 py-0 shadow-none transition-all duration-300 group-hover:-translate-y-1 group-hover:border-foreground/40 group-hover:bg-secondary/60 group-hover:shadow-[0_18px_60px_-50px_color-mix(in_oklab,var(--ring)_60%,transparent)]">
         <CardHeader className="flex grid-cols-none flex-row items-start justify-between gap-4 p-5 pb-0">
-          <div>
-            <div className="mb-2 font-mono text-[10px] uppercase text-muted-foreground">
-              company
+          <div className="flex min-w-0 items-start gap-3">
+            <StartupLogo slug={startup.slug} name={startup.name} size="sm" />
+            <div className="min-w-0">
+              <div className="mb-2 font-mono text-[10px] uppercase text-muted-foreground">
+                company
+              </div>
+              <CardTitle className="text-xl font-medium leading-tight">
+                {startup.name}
+              </CardTitle>
             </div>
-            <CardTitle className="text-xl font-medium leading-tight">
-              {startup.name}
-            </CardTitle>
           </div>
           <div className="shrink-0 text-right">
             <div className="font-mono text-[13px] font-medium">

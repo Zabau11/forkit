@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Building2, ExternalLink } from "lucide-react";
 
 import { StartupBrowser } from "@/components/startup-browser";
+import { StartupLogo } from "@/components/startup-logo";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -61,7 +62,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
-      <nav className="absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b border-border px-6 py-5">
+      <nav className="animate-enter absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b border-border px-6 py-5">
         <Link href="/" className="font-mono text-[15px] font-medium">
           fork<span className="text-muted-foreground">it</span>
         </Link>
@@ -93,27 +94,33 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="flex min-h-screen flex-col justify-center border-b border-border px-6 pb-8 pt-26 md:pt-32">
         <div className="grid w-full items-center gap-8 md:grid-cols-[minmax(0,0.92fr)_minmax(520px,0.72fr)] lg:gap-4">
-          <div>
+          <div className="animate-enter motion-delay-1">
             <div className="font-mono text-[13px] uppercase text-muted-foreground">
               for solo founders
             </div>
-            <h1 className="mt-4 text-[44px] font-semibold leading-[1.05] tracking-[-1.5px] md:text-[72px]">
+            <h1 className="animate-enter motion-delay-2 mt-4 text-[44px] font-semibold leading-[1.05] tracking-[-1.5px] md:text-[72px]">
               Their billion-dollar idea,
               <br />
               <em className="font-normal text-muted-foreground">
                 your vertical niche.
               </em>
             </h1>
-            <p className="mt-4 max-w-[500px] text-lg leading-[1.8] text-muted-foreground">
+            <p className="animate-enter motion-delay-3 mt-4 max-w-[500px] text-lg leading-[1.8] text-muted-foreground">
               We take VC-backed horizontal startups and find the smaller,
               focused versions a solo founder can actually build and own.
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
-              {heroTags.map((tag) => (
+              {heroTags.map((tag, index) => (
                 <Badge
                   key={tag}
                   variant="secondary"
-                  className="rounded-full border border-border bg-secondary px-3 py-1 font-mono text-[11px] font-normal text-muted-foreground"
+                  className={cn(
+                    "animate-enter rounded-full border border-border bg-secondary px-3 py-1 font-mono text-[11px] font-normal text-muted-foreground transition-colors hover:border-primary/60 hover:text-foreground",
+                    index === 0 && "motion-delay-2",
+                    index === 1 && "motion-delay-3",
+                    index === 2 && "motion-delay-4",
+                    index > 2 && "motion-delay-5",
+                  )}
                 >
                   {tag}
                 </Badge>
@@ -125,17 +132,23 @@ export default async function Home({ searchParams }: HomeProps) {
             <Link
               href={`/startups/${featuredStartup.slug}`}
               aria-label={`View ${featuredStartup.name} detail page`}
-              className="group hidden w-full self-start -translate-y-8 rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
+              className="animate-rise motion-delay-3 group hidden w-full self-start -translate-y-8 rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 md:block"
             >
-              <Card className="relative min-h-[520px] w-full overflow-hidden gap-0 rounded-lg border-border/80 bg-[linear-gradient(135deg,hsl(var(--card))_0%,hsl(var(--secondary))_100%)] p-10 pt-7 shadow-none transition-colors before:absolute before:inset-x-0 before:-top-4 before:bottom-0 before:bg-[linear-gradient(to_right,hsl(var(--border)/0.45)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.35)_1px,transparent_1px)] before:bg-[size:48px_48px] before:opacity-30 group-hover:cursor-pointer group-hover:border-foreground/30 xl:p-12 xl:pt-9">
+              <Card className="animate-grid-drift animate-sheen animate-soft-pulse relative min-h-[520px] w-full overflow-hidden gap-0 rounded-lg border-border/80 bg-[linear-gradient(135deg,hsl(var(--card))_0%,hsl(var(--secondary))_100%)] p-10 pt-7 shadow-none transition-all duration-500 before:absolute before:inset-x-0 before:-top-4 before:bottom-0 before:bg-[linear-gradient(to_right,hsl(var(--border)/0.45)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.35)_1px,transparent_1px)] before:bg-[size:48px_48px] before:opacity-30 after:absolute after:inset-y-[-20%] after:left-0 after:w-1/2 after:bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--primary)_18%,transparent),transparent)] after:content-[''] group-hover:cursor-pointer group-hover:border-foreground/30 group-hover:shadow-[0_22px_80px_-56px_color-mix(in_oklab,var(--ring)_65%,transparent)] xl:p-12 xl:pt-9">
                 <CardHeader className="relative gap-7 p-0">
                   <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase text-muted-foreground">
                     <Building2 className="size-3.5" aria-hidden="true" />
                     featured company
                   </div>
 
-                  <div className="flex items-start justify-between gap-4">
-                    <CardTitle className="text-[48px] font-semibold leading-none xl:text-[56px]">
+                  <div className="flex items-center gap-4">
+                    <StartupLogo
+                      slug={featuredStartup.slug}
+                      name={featuredStartup.name}
+                      size="lg"
+                      className="bg-background/50"
+                    />
+                    <CardTitle className="min-w-0 text-[48px] font-semibold leading-none xl:text-[56px]">
                       {featuredStartup.name}
                     </CardTitle>
                   </div>
@@ -204,8 +217,11 @@ export default async function Home({ searchParams }: HomeProps) {
           <div
             key={stat.label}
             className={cn(
-              "border-b border-border px-6 py-5 sm:border-b-0",
+              "animate-enter border-b border-border px-6 py-5 sm:border-b-0",
               index !== stats.length - 1 && "sm:border-r",
+              index === 0 && "motion-delay-1",
+              index === 1 && "motion-delay-2",
+              index === 2 && "motion-delay-3",
             )}
           >
             <div className="text-[32px] font-medium leading-tight">
@@ -237,7 +253,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         <section
           id="suggest"
-          className="mt-6 flex flex-col gap-4 rounded-lg border border-border bg-secondary p-6 sm:flex-row sm:items-center sm:justify-between"
+          className="animate-enter motion-delay-2 mt-6 flex flex-col gap-4 rounded-lg border border-border bg-secondary p-6 transition-colors hover:border-foreground/30 sm:flex-row sm:items-center sm:justify-between"
         >
           <div>
             <div className="text-sm font-medium">
