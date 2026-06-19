@@ -1,4 +1,4 @@
-# forkit
+# forkitt
 
 A Next.js landing page for a curated database of VC-backed startups and solo-founder fork ideas.
 

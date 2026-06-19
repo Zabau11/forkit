@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Startup library | forkit",
+  title: "Startup library | forkitt",
   description:
     "Browse startup patterns and vertical fork ideas for solo founders.",
 };
@@ -62,7 +62,7 @@ export default async function StartupsPage({
       <nav className="flex items-center justify-between border-b border-border px-6 py-5">
         <div className="flex items-center gap-5">
           <Link href="/" className="font-mono text-[15px] font-medium">
-            fork<span className="text-muted-foreground">it</span>
+            fork<span className="text-muted-foreground">itt</span>
           </Link>
           <Link
             href="/"

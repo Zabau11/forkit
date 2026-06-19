@@ -342,7 +342,7 @@ function createReviewSchema(ideasPerStartup) {
 function buildPromptParts(startup, ideasPerStartup, model) {
   return {
     system: [
-      "You generate startup fork ideas for Forkit.",
+      "You generate startup fork ideas for Forkitt.",
       "The goal is viable solo-founder SaaS or AI opportunities, not generic brainstorming.",
       "Each idea must be a narrower, buildable fork of the startup pattern.",
       "Prefer boring niches with clear budgets, repeated pain, and an MVP that avoids regulated or capital-heavy requirements.",
@@ -415,7 +415,7 @@ async function callAnthropic({ apiKey, model, startup, ideasPerStartup }) {
         {
           name: "record_startup_review",
           description:
-            "Record one startup profile and its generated Forkit review ideas.",
+            "Record one startup profile and its generated Forkitt review ideas.",
           input_schema: createReviewSchema(ideasPerStartup),
           strict: true,
         },

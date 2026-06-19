@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "forkit",
+  title: "forkitt",
   description:
     "A curated database of VC-backed startups with vertical niche fork ideas for solo founders.",
 };

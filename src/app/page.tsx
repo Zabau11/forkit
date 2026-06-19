@@ -64,7 +64,7 @@ export default async function Home({ searchParams }: HomeProps) {
     <main className="relative min-h-screen bg-background text-foreground">
       <nav className="animate-enter absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b border-border px-6 py-5">
         <Link href="/" className="font-mono text-[15px] font-medium">
-          fork<span className="text-muted-foreground">it</span>
+          fork<span className="text-muted-foreground">itt</span>
         </Link>
         <div className="flex items-center gap-5">
           <Link

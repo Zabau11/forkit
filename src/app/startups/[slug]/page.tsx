@@ -40,12 +40,12 @@ export async function generateMetadata({
 
   if (!startup) {
     return {
-      title: "Startup not found | forkit",
+      title: "Startup not found | forkitt",
     };
   }
 
   return {
-    title: `${startup.name} fork ideas | forkit`,
+    title: `${startup.name} fork ideas | forkitt`,
     description: startup.description,
   };
 }
@@ -89,7 +89,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
       <nav className="flex items-center justify-between border-b border-border px-6 py-5">
         <div className="flex items-center gap-5">
           <Link href="/" className="font-mono text-[15px] font-medium">
-            fork<span className="text-muted-foreground">it</span>
+            fork<span className="text-muted-foreground">itt</span>
           </Link>
           <Link
             href="/"
