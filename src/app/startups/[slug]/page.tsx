@@ -6,6 +6,7 @@ import {
   ArrowRight,
   Banknote,
   CheckCircle2,
+  ChevronDown,
   ExternalLink,
   Layers3,
   Route,
@@ -303,7 +304,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
             {forkIdeas.map((idea, index) => (
               <Card
                 key={idea.id}
-                className="min-h-[230px] gap-0 rounded-lg border-border/80 py-0 shadow-none"
+                className="gap-0 rounded-lg border-border/80 py-0 shadow-none"
               >
                 <CardHeader className="gap-3 p-7 pb-0">
                   <div className="flex items-start justify-between gap-4">
@@ -336,10 +337,10 @@ export default async function StartupPage({ params }: StartupPageProps) {
                   <div className="grid gap-3 border-t border-border pt-4 sm:grid-cols-2">
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
-                        pricing
+                        ideal customer
                       </div>
                       <p className="mt-1 text-sm leading-6">
-                        {createShortText(idea.pricing)}
+                        {idea.niche}
                       </p>
                     </div>
                     <div>
@@ -353,6 +354,79 @@ export default async function StartupPage({ params }: StartupPageProps) {
                       </div>
                     </div>
                   </div>
+
+                  <details className="group border-t border-border pt-1">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-md py-3 font-mono text-[11px] uppercase tracking-[1.2px] text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+                      <span>more information</span>
+                      <ChevronDown
+                        className="size-4 shrink-0 transition-transform duration-300 group-open:rotate-180"
+                        aria-hidden="true"
+                      />
+                    </summary>
+
+                    <div className="grid gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2">
+                      <ForkDetailSection
+                        label="ICP"
+                        value={createIcpDescription(idea)}
+                      />
+                      <ForkDetailSection
+                        label="problem"
+                        value={
+                          idea.problem ??
+                          "The target customer is relying on a broad tool or manual workaround that does not match their workflow."
+                        }
+                      />
+                      <ForkDetailSection
+                        label="why it works"
+                        value={idea.whyItWorks}
+                      />
+                      <ForkDetailSection label="MVP" value={idea.mvp} />
+                      <ForkDetailSection
+                        label="go-to-market"
+                        value={idea.goToMarket}
+                      />
+                      <ForkDetailSection
+                        label="pricing"
+                        value={idea.pricing}
+                      />
+                    </div>
+
+                    {idea.evidence?.length ? (
+                      <div className="mt-3 rounded-lg border border-border bg-background/40 p-4">
+                        <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-muted-foreground">
+                          supporting evidence
+                        </div>
+                        <div className="mt-3 space-y-3">
+                          {idea.evidence.map((item, evidenceIndex) => (
+                            <div
+                              key={`${item.source}-${evidenceIndex}`}
+                              className="text-xs leading-5 text-muted-foreground"
+                            >
+                              <div className="text-foreground">
+                                {isExternalSource(item.source) ? (
+                                  <a
+                                    href={item.source}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                                  >
+                                    source {evidenceIndex + 1}
+                                    <ExternalLink
+                                      className="size-3"
+                                      aria-hidden="true"
+                                    />
+                                  </a>
+                                ) : (
+                                  item.source
+                                )}
+                              </div>
+                              <p className="mt-1">{item.snippet}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                  </details>
                 </CardContent>
               </Card>
             ))}
@@ -392,6 +466,31 @@ export default async function StartupPage({ params }: StartupPageProps) {
       </section>
     </main>
   );
+}
+
+function ForkDetailSection({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <section className="bg-card p-4">
+      <h4 className="font-mono text-[10px] uppercase tracking-[1.5px] text-primary">
+        {label}
+      </h4>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{value}</p>
+    </section>
+  );
+}
+
+function createIcpDescription(idea: StartupDetailForkIdea): string {
+  return `${idea.niche}. The strongest early customer already feels this problem, uses a workaround today, and can approve a focused tool without a long enterprise buying process.`;
+}
+
+function isExternalSource(source: string): boolean {
+  return source.startsWith("https://") || source.startsWith("http://");
 }
 
 function createShortDescription(idea: StartupDetailForkIdea): string {
