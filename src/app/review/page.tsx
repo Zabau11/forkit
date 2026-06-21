@@ -48,7 +48,7 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
   if (!isReviewConfigured()) {
     return (
       <ReviewShell>
-        <div className="max-w-xl border border-border p-6">
+        <div className="animate-page-enter max-w-xl border border-border p-6">
           <div className="font-mono text-[11px] uppercase text-muted-foreground">
             setup required
           </div>
@@ -67,7 +67,7 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
       <ReviewShell>
         <form
           action={loginReviewAdmin}
-          className="max-w-md border border-border bg-secondary/40 p-6"
+          className="animate-page-enter max-w-md border border-border bg-secondary/40 p-6"
         >
           <div className="flex size-10 items-center justify-center rounded-md border border-border bg-background text-primary">
             <Lock className="size-5" aria-hidden="true" />
@@ -106,7 +106,7 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
 
   return (
     <ReviewShell>
-      <header className="border-b border-border px-6 py-6">
+      <header className="animate-page-enter border-b border-border px-6 py-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <div className="flex items-center gap-2 font-mono text-[11px] uppercase text-muted-foreground">
@@ -135,13 +135,13 @@ export default async function ReviewPage({ searchParams }: ReviewPageProps) {
         </div>
       </header>
 
-      <section className="grid border-b border-border sm:grid-cols-3">
+      <section className="animate-page-enter motion-delay-1 grid border-b border-border sm:grid-cols-3">
         <ReviewStat label="loaded ideas" value={String(ideas.length)} />
         <ReviewStat label="visible" value={String(visibleIdeas)} />
         <ReviewStat label="filter" value={status} />
       </section>
 
-      <section className="px-6 py-5">
+      <section className="animate-page-enter motion-delay-2 px-6 py-5">
         <div className="mb-5 flex flex-wrap gap-1.5">
           {(["all", ...reviewStatuses] as ReviewStatusFilter[]).map((item) => (
             <Link

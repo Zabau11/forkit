@@ -86,7 +86,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <nav className="flex items-center justify-between border-b border-border px-6 py-5">
+      <nav className="animate-page-enter flex items-center justify-between border-b border-border px-6 py-5">
         <div className="flex items-center gap-5">
           <Link href="/" className="font-mono text-[15px] font-medium">
             fork<span className="text-muted-foreground">itt</span>
@@ -119,7 +119,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
         </div>
       </nav>
 
-      <section className="grid border-b border-border lg:grid-cols-[minmax(0,1fr)_360px]">
+      <section className="animate-page-enter motion-delay-1 grid border-b border-border lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="px-6 py-10 md:py-14">
           <div className="flex flex-wrap items-center gap-2">
             <Badge
@@ -173,7 +173,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
         </aside>
       </section>
 
-      <section className="grid border-b border-border md:grid-cols-3">
+      <section className="animate-page-enter motion-delay-2 grid border-b border-border md:grid-cols-3">
         {highlights.map((highlight, index) => {
           const Icon = highlight.icon;
 
@@ -199,7 +199,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
         })}
       </section>
 
-      <section className="grid border-b border-border lg:grid-cols-[320px_minmax(0,1fr)]">
+      <section className="animate-page-enter motion-delay-3 grid border-b border-border lg:grid-cols-[320px_minmax(0,1fr)]">
         <aside className="border-b border-border px-6 py-8 lg:border-b-0 lg:border-r">
           <div className="sticky top-6 space-y-8">
             {bestIdea ? (
@@ -360,7 +360,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
+      <section className="animate-page-enter motion-delay-4 flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="text-sm font-medium">Want another startup?</div>
           <div className="mt-1 text-xs leading-6 text-muted-foreground">

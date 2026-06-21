@@ -59,7 +59,7 @@ export default async function StartupsPage({
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <nav className="flex items-center justify-between border-b border-border px-6 py-5">
+      <nav className="animate-page-enter flex items-center justify-between border-b border-border px-6 py-5">
         <div className="flex items-center gap-5">
           <Link href="/" className="font-mono text-[15px] font-medium">
             fork<span className="text-muted-foreground">itt</span>
@@ -84,7 +84,7 @@ export default async function StartupsPage({
         </Link>
       </nav>
 
-      <section className="grid border-b border-border lg:grid-cols-[minmax(0,1fr)_360px]">
+      <section className="animate-page-enter motion-delay-1 grid border-b border-border lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="px-6 py-10 md:py-14">
           <div className="font-mono text-[13px] uppercase text-muted-foreground">
             startup library
@@ -118,7 +118,7 @@ export default async function StartupsPage({
         </aside>
       </section>
 
-      <section className="px-6 py-6">
+      <section className="animate-page-enter motion-delay-2 px-6 py-6">
         {data.error ? (
           <div className="mb-3 rounded-lg border border-border bg-secondary px-4 py-3 text-xs text-muted-foreground">
             {data.error}
@@ -136,7 +136,7 @@ export default async function StartupsPage({
         />
       </section>
 
-      <section className="flex flex-col gap-4 border-t border-border px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
+      <section className="animate-page-enter motion-delay-3 flex flex-col gap-4 border-t border-border px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="text-sm font-medium">Want another startup?</div>
           <div className="mt-1 text-xs leading-6 text-muted-foreground">

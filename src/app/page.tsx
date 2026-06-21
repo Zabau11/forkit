@@ -212,7 +212,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </section>
 
-      <section className="grid border-b border-border sm:grid-cols-3">
+      <section className="animate-page-enter motion-delay-2 grid border-b border-border sm:grid-cols-3">
         {stats.map((stat, index) => (
           <div
             key={stat.label}
@@ -234,7 +234,10 @@ export default async function Home({ searchParams }: HomeProps) {
         ))}
       </section>
 
-      <section id="startups" className="px-6 py-6">
+      <section
+        id="startups"
+        className="animate-page-enter motion-delay-3 px-6 py-6"
+      >
         {data.error ? (
           <div className="mb-3 rounded-lg border border-border bg-secondary px-4 py-3 text-xs text-muted-foreground">
             {data.error}
