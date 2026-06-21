@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Review | forkitt",
+  title: "Review",
   robots: {
     index: false,
     follow: false,

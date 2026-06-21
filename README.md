@@ -10,7 +10,9 @@ A Next.js landing page for a curated database of VC-backed startups and solo-fou
    npm install
    ```
 
-2. Create `.env.local` from `.env.local.example` and add your Supabase URL and anon key.
+2. Create `.env.local` from `.env.local.example` and add your production
+   site URL, Supabase URL, and anon key. `NEXT_PUBLIC_SITE_URL` is used for
+   canonical URLs, social cards, robots, and the sitemap.
 
 3. Apply the Supabase migration in `supabase/migrations`, then seed with `supabase/seed.sql`.
 

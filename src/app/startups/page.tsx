@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Layers3 } from "lucide-react";
 
+import { JsonLd } from "@/components/json-ld";
 import { StartupBrowser } from "@/components/startup-browser";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
 import { buttonVariants } from "@/components/ui/button";
@@ -11,14 +12,25 @@ import {
   normalizeSearchQuery,
   normalizeStartupSort,
 } from "@/lib/supabase";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Startup library | forkitt",
+  title: "Startup library",
   description:
     "Browse startup patterns and vertical fork ideas for solo founders.",
+  alternates: {
+    canonical: "/startups",
+  },
+  openGraph: {
+    type: "website",
+    url: "/startups",
+    title: `Startup library | ${siteConfig.name}`,
+    description:
+      "Browse proven startup patterns and focused fork ideas for solo founders.",
+  },
 };
 
 type StartupsPageProps = {
@@ -59,6 +71,26 @@ export default async function StartupsPage({
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Startup library",
+          description:
+            "A curated library of startup patterns and vertical fork ideas for solo founders.",
+          url: absoluteUrl("/startups"),
+          mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: data.startups.length,
+            itemListElement: data.startups.map((startup, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: startup.name,
+              url: absoluteUrl(`/startups/${startup.slug}`),
+            })),
+          },
+        }}
+      />
       <nav className="animate-page-enter flex items-center justify-between border-b border-border px-6 py-5">
         <div className="flex items-center gap-5">
           <Link href="/" className="font-mono text-[15px] font-medium">

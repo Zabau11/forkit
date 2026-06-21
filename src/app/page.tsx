@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Building2, ExternalLink } from "lucide-react";
 
+import { JsonLd } from "@/components/json-ld";
 import { StartupBrowser } from "@/components/startup-browser";
 import { StartupLogo } from "@/components/startup-logo";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
@@ -14,6 +15,7 @@ import {
   normalizeStartupSort,
 } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -62,6 +64,29 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": `${absoluteUrl("/")}#organization`,
+              name: siteConfig.name,
+              url: absoluteUrl("/"),
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${absoluteUrl("/")}#website`,
+              name: siteConfig.name,
+              url: absoluteUrl("/"),
+              description: siteConfig.description,
+              publisher: {
+                "@id": `${absoluteUrl("/")}#organization`,
+              },
+            },
+          ],
+        }}
+      />
       <nav className="animate-enter absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b border-border px-6 py-5">
         <Link href="/" className="font-mono text-[15px] font-medium">
           fork<span className="text-muted-foreground">itt</span>

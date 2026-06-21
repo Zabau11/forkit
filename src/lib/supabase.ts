@@ -74,6 +74,11 @@ export type LandingPageFilters = {
   sort: StartupSort;
 };
 
+export type SitemapStartup = {
+  slug: string;
+  createdAt: string;
+};
+
 type StartupRow = {
   id: string;
   slug?: string | null;
@@ -406,4 +411,29 @@ export async function getStartupDetailBySlug(
   }
 
   return null;
+}
+
+export async function getPublishedStartupsForSitemap(): Promise<
+  SitemapStartup[]
+> {
+  const supabase = createSupabaseServerClient();
+
+  if (!supabase) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from("startups")
+    .select("slug, created_at")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false });
+
+  if (error || !data) {
+    return [];
+  }
+
+  return data.map((startup) => ({
+    slug: startup.slug,
+    createdAt: startup.created_at,
+  }));
 }

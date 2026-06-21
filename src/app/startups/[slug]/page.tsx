@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { IdeaPromptActions } from "@/components/idea-prompt-actions";
+import { JsonLd } from "@/components/json-ld";
 import { StartupLogo } from "@/components/startup-logo";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import {
   type StartupDetail,
   type StartupDetailForkIdea,
 } from "@/lib/supabase";
+import { absoluteUrl, siteConfig } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -46,8 +48,31 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${startup.name} fork ideas | forkitt`,
+    title: `${startup.name} fork ideas`,
     description: startup.description,
+    alternates: {
+      canonical: `/startups/${startup.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      url: `/startups/${startup.slug}`,
+      title: `${startup.name} fork ideas | ${siteConfig.name}`,
+      description: startup.description,
+      images: [
+        {
+          url: `/startups/${startup.slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: `${startup.name} fork ideas`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${startup.name} fork ideas | ${siteConfig.name}`,
+      description: startup.description,
+      images: [`/startups/${startup.slug}/opengraph-image`],
+    },
   };
 }
 
@@ -87,6 +112,54 @@ export default async function StartupPage({ params }: StartupPageProps) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: `${startup.name} fork ideas`,
+          description: startup.description,
+          url: absoluteUrl(`/startups/${startup.slug}`),
+          isPartOf: {
+            "@type": "WebSite",
+            name: siteConfig.name,
+            url: absoluteUrl("/"),
+          },
+          breadcrumb: {
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: absoluteUrl("/"),
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Startups",
+                item: absoluteUrl("/startups"),
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: startup.name,
+                item: absoluteUrl(`/startups/${startup.slug}`),
+              },
+            ],
+          },
+          mainEntity: {
+            "@type": "ItemList",
+            name: `${startup.name} fork ideas`,
+            numberOfItems: forkIdeas.length,
+            itemListElement: forkIdeas.map((idea, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: idea.title,
+              description: createShortDescription(idea),
+            })),
+          },
+        }}
+      />
       <nav className="animate-page-enter flex items-center justify-between border-b border-border px-6 py-5">
         <div className="flex items-center gap-5">
           <Link href="/" className="font-mono text-[15px] font-medium">
