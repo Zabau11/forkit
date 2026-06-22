@@ -28,6 +28,7 @@ type LogoDefinition =
   | {
       type: "remote";
       src: string;
+      darkModeFilter?: string;
     }
   | {
       type: "wordmark";
@@ -51,6 +52,7 @@ const logos: Record<string, LogoDefinition> = {
   mercury: {
     type: "remote",
     src: "https://mercury.com/icon.svg",
+    darkModeFilter: "invert(1)",
   },
   notion: { type: "simple", icon: siNotion },
   perplexity: { type: "simple", icon: siPerplexity },
@@ -93,6 +95,43 @@ const iconSizeClasses = {
   lg: "size-9",
 };
 
+const DARK_BADGE_BACKGROUND = "#0b0d0a";
+const MIN_GRAPHIC_CONTRAST = 3;
+
+function getContrastAwareColor(hex: string): string {
+  const brandColor = `#${hex}`;
+
+  return getContrastRatio(brandColor, DARK_BADGE_BACKGROUND) <
+    MIN_GRAPHIC_CONTRAST
+    ? "var(--foreground)"
+    : brandColor;
+}
+
+function getContrastRatio(foreground: string, background: string): number {
+  const foregroundLuminance = getRelativeLuminance(foreground);
+  const backgroundLuminance = getRelativeLuminance(background);
+  const lighter = Math.max(foregroundLuminance, backgroundLuminance);
+  const darker = Math.min(foregroundLuminance, backgroundLuminance);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function getRelativeLuminance(hex: string): number {
+  const normalized = hex.replace("#", "");
+  const channels = [0, 2, 4].map((offset) => {
+    const channel =
+      Number.parseInt(normalized.slice(offset, offset + 2), 16) / 255;
+
+    return channel <= 0.04045
+      ? channel / 12.92
+      : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+
+  return (
+    channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
+  );
+}
+
 export function StartupLogo({
   slug,
   name,
@@ -116,7 +155,7 @@ export function StartupLogo({
           aria-label={`${name} logo`}
           viewBox="0 0 24 24"
           className={iconSizeClasses[size]}
-          style={{ fill: `#${logo.icon.hex}` }}
+          style={{ fill: getContrastAwareColor(logo.icon.hex) }}
         >
           <path d={logo.icon.path} />
         </svg>
@@ -128,6 +167,9 @@ export function StartupLogo({
           alt=""
           aria-hidden="true"
           className={cn("object-contain", iconSizeClasses[size])}
+          style={
+            logo.darkModeFilter ? { filter: logo.darkModeFilter } : undefined
+          }
         />
       ) : null}
 
