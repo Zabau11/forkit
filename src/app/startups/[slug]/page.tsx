@@ -16,6 +16,7 @@ import {
 import { IdeaPromptActions } from "@/components/idea-prompt-actions";
 import { JsonLd } from "@/components/json-ld";
 import { StartupLogo } from "@/components/startup-logo";
+import { YcBadge } from "@/components/yc-badge";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -208,6 +209,13 @@ export default async function StartupPage({ params }: StartupPageProps) {
             >
               {startup.roundLabel}
             </Badge>
+            {startup.ycBatch ? (
+              <YcBadge
+                batch={startup.ycBatch}
+                url={startup.ycUrl}
+                className="px-3 py-1 text-[11px]"
+              />
+            ) : null}
           </div>
 
           <div className="mt-5 flex flex-col gap-4 md:flex-row md:items-end md:gap-6">
@@ -238,7 +246,9 @@ export default async function StartupPage({ params }: StartupPageProps) {
           <p className="mt-5 text-[15px] leading-[1.8]">{startup.pattern}</p>
           <div className="mt-6 border-t border-border pt-5">
             <div className="font-mono text-[11px] text-muted-foreground">
-              {startup.amountRaised}
+              {startup.ycBatch
+                ? `YC ${startup.ycBatch} - ${startup.amountRaised}`
+                : startup.amountRaised}
             </div>
             <div className="mt-1 text-sm text-muted-foreground">
               backing signal

@@ -187,6 +187,8 @@ function normalizeReviewData(data, importReviewStatus) {
           startup.roundLabel,
           `startups[${startupIndex}].roundLabel`,
         ),
+        yc_batch: getOptionalString(startup.ycBatch),
+        yc_url: getOptionalString(startup.ycUrl),
         sort_order: getOptionalNumber(
           startup.sortOrder,
           (startupIndex + 1) * 10,

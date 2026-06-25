@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/json-ld";
 import { StartupBrowser } from "@/components/startup-browser";
 import { StartupLogo } from "@/components/startup-logo";
 import { SubmitStartupForm } from "@/components/submit-startup-form";
+import { YcBadge } from "@/components/yc-badge";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -180,6 +181,9 @@ export default async function Home({ searchParams }: HomeProps) {
                   <p className="max-w-[420px] text-base leading-7 text-muted-foreground">
                     {featuredStartup.description}
                   </p>
+                  {featuredStartup.ycBatch ? (
+                    <YcBadge batch={featuredStartup.ycBatch} />
+                  ) : null}
                 </CardHeader>
 
                 <CardContent className="relative p-0 pt-8">

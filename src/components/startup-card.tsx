@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { StartupLogo } from "@/components/startup-logo";
+import { YcBadge } from "@/components/yc-badge";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -50,6 +51,11 @@ export function StartupCard({ startup }: StartupCardProps) {
         </CardHeader>
 
         <CardContent className="grow p-5 pt-3">
+          {startup.ycBatch ? (
+            <div className="mb-3">
+              <YcBadge batch={startup.ycBatch} />
+            </div>
+          ) : null}
           <p className="max-w-3xl text-[13px] leading-6 text-muted-foreground">
             {startup.description}
           </p>

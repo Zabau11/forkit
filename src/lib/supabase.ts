@@ -42,6 +42,8 @@ export type Startup = {
   category: Exclude<CategoryFilter, "all">;
   amountRaised: string;
   roundLabel: string;
+  ycBatch?: string | null;
+  ycUrl?: string | null;
   pattern?: string | null;
   sortOrder: number;
   createdAt: string;
@@ -87,6 +89,8 @@ type StartupRow = {
   category: Exclude<CategoryFilter, "all">;
   amount_raised: string;
   round_label: string;
+  yc_batch?: string | null;
+  yc_url?: string | null;
   sort_order: number;
   created_at: string;
   pattern?: string | null;
@@ -188,6 +192,8 @@ export async function getLandingPageData({
         category,
         amount_raised,
         round_label,
+        yc_batch,
+        yc_url,
         pattern,
         sort_order,
         created_at,
@@ -263,6 +269,7 @@ function filterStartups(startups: Startup[], query: string): Startup[] {
       startup.category,
       startup.roundLabel,
       startup.amountRaised,
+      startup.ycBatch ?? "",
       startup.pattern ?? "",
       ...startup.forkIdeas.flatMap((idea) => [idea.title, idea.niche]),
     ]
@@ -300,6 +307,8 @@ function mapStartupRow(row: StartupRow): Startup {
     category: row.category,
     amountRaised: row.amount_raised,
     roundLabel: row.round_label,
+    ycBatch: row.yc_batch ?? null,
+    ycUrl: row.yc_url ?? null,
     pattern: row.pattern ?? null,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
@@ -380,6 +389,8 @@ export async function getStartupDetailBySlug(
           category,
           amount_raised,
           round_label,
+          yc_batch,
+          yc_url,
           sort_order,
           created_at,
           pattern,
