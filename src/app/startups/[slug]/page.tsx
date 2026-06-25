@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { ForkIdeaVoteButtons } from "@/components/fork-idea-vote-buttons";
 import { IdeaPromptActions } from "@/components/idea-prompt-actions";
 import { JsonLd } from "@/components/json-ld";
 import { StartupLogo } from "@/components/startup-logo";
@@ -399,11 +400,18 @@ export default async function StartupPage({ params }: StartupPageProps) {
                         {idea.title}
                       </CardTitle>
                     </div>
-                    {idea.viabilityScore ? (
-                      <div className="shrink-0 rounded-full border border-border bg-secondary px-3 py-1 text-right font-mono text-[11px] text-muted-foreground">
-                        {idea.viabilityScore}/5
-                      </div>
-                    ) : null}
+                    <div className="flex shrink-0 items-center gap-2">
+                      {idea.viabilityScore ? (
+                        <div className="rounded-full border border-border bg-secondary px-3 py-1 font-mono text-[11px] text-muted-foreground">
+                          {idea.viabilityScore}/5
+                        </div>
+                      ) : null}
+                      <ForkIdeaVoteButtons
+                        ideaId={idea.id}
+                        initialUpvotes={idea.upvotes}
+                        initialDownvotes={idea.downvotes}
+                      />
+                    </div>
                   </div>
                   <Badge
                     variant="outline"

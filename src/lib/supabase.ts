@@ -20,6 +20,8 @@ export type ForkIdea = {
   pricing?: string | null;
   viabilityScore?: number | null;
   evidence?: IdeaEvidence[];
+  upvotes: number;
+  downvotes: number;
 };
 
 export type IdeaEvidence = {
@@ -112,6 +114,8 @@ type ForkIdeaRow = {
   pricing?: string | null;
   viability_score?: number | null;
   evidence?: IdeaEvidence[] | null;
+  upvotes?: number | null;
+  downvotes?: number | null;
 };
 
 type LandingSettingRow = {
@@ -325,6 +329,8 @@ function mapStartupRow(row: StartupRow): Startup {
         pricing: idea.pricing ?? null,
         viabilityScore: idea.viability_score ?? null,
         evidence: Array.isArray(idea.evidence) ? idea.evidence : [],
+        upvotes: idea.upvotes ?? 0,
+        downvotes: idea.downvotes ?? 0,
       }))
       .sort((a, b) => a.sortOrder - b.sortOrder),
   };
@@ -408,7 +414,9 @@ export async function getStartupDetailBySlug(
             go_to_market,
             pricing,
             viability_score,
-            evidence
+            evidence,
+            upvotes,
+            downvotes
           )
         `,
       )
