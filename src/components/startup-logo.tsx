@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 import {
   siAirbnb,
   siBrex,
@@ -193,6 +197,9 @@ export function StartupLogo({
   className,
 }: StartupLogoProps) {
   const logo = logos[slug];
+  const [imgFailed, setImgFailed] = useState(false);
+
+  const showFallback = !logo || (logo.type === "remote" && imgFailed);
 
   return (
     <div
@@ -215,7 +222,7 @@ export function StartupLogo({
         </svg>
       ) : null}
 
-      {logo?.type === "remote" ? (
+      {logo?.type === "remote" && !imgFailed ? (
         <img
           src={logo.src}
           alt=""
@@ -224,6 +231,7 @@ export function StartupLogo({
           style={
             logo.darkModeFilter ? { filter: logo.darkModeFilter } : undefined
           }
+          onError={() => setImgFailed(true)}
         />
       ) : null}
 
@@ -240,7 +248,7 @@ export function StartupLogo({
         </span>
       ) : null}
 
-      {!logo ? (
+      {showFallback ? (
         <span
           className="font-mono text-sm font-semibold text-muted-foreground"
           aria-hidden="true"
