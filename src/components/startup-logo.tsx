@@ -54,7 +54,7 @@ const logos: Record<string, LogoDefinition> = {
   airbnb: { type: "simple", icon: siAirbnb },
   amplitude: {
     type: "remote",
-    src: "https://logo.clearbit.com/amplitude.com",
+    src: "https://api.iconify.design/logos/amplitude.svg",
   },
   brex: { type: "simple", icon: siBrex },
   canva: {
@@ -63,10 +63,7 @@ const logos: Record<string, LogoDefinition> = {
   },
   coinbase: { type: "simple", icon: siCoinbase },
   datadog: { type: "simple", icon: siDatadog },
-  deel: {
-    type: "remote",
-    src: "https://logo.clearbit.com/deel.com",
-  },
+  deel: { type: "wordmark", label: "Deel", color: "#25C9D0" },
   docusign: {
     type: "remote",
     src: "https://api.iconify.design/cib/docusign.svg?color=%23f2efdf",
@@ -74,20 +71,14 @@ const logos: Record<string, LogoDefinition> = {
   doordash: { type: "simple", icon: siDoordash },
   dropbox: { type: "simple", icon: siDropbox },
   duolingo: { type: "simple", icon: siDuolingo },
-  faire: {
-    type: "remote",
-    src: "https://logo.clearbit.com/faire.com",
-  },
+  faire: { type: "wordmark", label: "Faire", color: "#C8A876" },
   figma: { type: "simple", icon: siFigma },
-  flexport: {
-    type: "remote",
-    src: "https://logo.clearbit.com/flexport.com",
-  },
+  flexport: { type: "wordmark", label: "Flexport", color: "#4DA6FF" },
   gitlab: { type: "simple", icon: siGitlab },
   gusto: { type: "simple", icon: siGusto },
   heroku: {
     type: "remote",
-    src: "https://logo.clearbit.com/heroku.com",
+    src: "https://api.iconify.design/logos/heroku.svg",
   },
   instacart: { type: "simple", icon: siInstacart },
   mercury: {
@@ -97,22 +88,13 @@ const logos: Record<string, LogoDefinition> = {
   },
   notion: { type: "simple", icon: siNotion },
   perplexity: { type: "simple", icon: siPerplexity },
-  ramp: {
-    type: "remote",
-    src: "https://logo.clearbit.com/ramp.com",
-  },
+  ramp: { type: "wordmark", label: "Ramp", color: "#6EE7B7" },
   retool: { type: "simple", icon: siRetool },
-  rippling: {
-    type: "remote",
-    src: "https://logo.clearbit.com/rippling.com",
-  },
-  "scale-ai": {
-    type: "remote",
-    src: "https://logo.clearbit.com/scale.com",
-  },
+  rippling: { type: "wordmark", label: "Rippling", color: "#FFBE45" },
+  "scale-ai": { type: "wordmark", label: "Scale", color: "#A78BFA" },
   segment: {
     type: "remote",
-    src: "https://logo.clearbit.com/segment.com",
+    src: "https://api.iconify.design/logos/segment.svg",
   },
   salesforce: {
     type: "remote",
@@ -120,19 +102,13 @@ const logos: Record<string, LogoDefinition> = {
   },
   shopify: { type: "simple", icon: siShopify },
   stripe: { type: "simple", icon: siStripe },
-  toast: {
-    type: "remote",
-    src: "https://logo.clearbit.com/toasttab.com",
-  },
+  toast: { type: "wordmark", label: "Toast", color: "#FF6B35" },
   twilio: {
     type: "remote",
     src: "https://api.iconify.design/logos/twilio-icon.svg",
   },
   webflow: { type: "simple", icon: siWebflow },
-  whatnot: {
-    type: "remote",
-    src: "https://logo.clearbit.com/whatnot.com",
-  },
+  whatnot: { type: "wordmark", label: "Whatnot", color: "#C084FC" },
   workday: {
     type: "remote",
     src: "https://api.iconify.design/arcticons/workday.svg?color=%23f68d2e",

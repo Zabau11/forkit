@@ -37,7 +37,6 @@ export function YcBadge({ batch, url, className }: YcBadgeProps) {
       rel="noreferrer"
       className="inline-flex rounded-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
       aria-label={`YC backed, ${batch}`}
-      onClick={(event) => event.stopPropagation()}
     >
       {content}
     </a>
