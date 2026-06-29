@@ -3,7 +3,7 @@
     {
       "name": "Mercury",
       "description": "Business banking and financial workflows for startups.",
-      "category": "saas",
+      "category": "finance",
       "amountRaised": "$250M",
       "roundLabel": "Series C",
       "websiteUrl": "https://mercury.com",
@@ -19,7 +19,7 @@
     {
       "name": "Ramp",
       "description": "Corporate cards, spend management, bill pay, procurement, and finance automation.",
-      "category": "saas",
+      "category": "finance",
       "amountRaised": "$300M",
       "roundLabel": "Growth financing",
       "websiteUrl": "https://ramp.com",

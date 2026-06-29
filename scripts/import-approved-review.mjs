@@ -3,7 +3,21 @@ import { readFile } from "node:fs/promises";
 import { createClient } from "@supabase/supabase-js";
 
 const DEFAULT_REVIEW_FILE = "generated/startups-review.json";
-const VALID_CATEGORIES = new Set(["saas", "ai", "marketplace"]);
+const VALID_CATEGORIES = new Set([
+  "finance",
+  "productivity",
+  "devtools",
+  "workforce",
+  "data",
+  "automation",
+  "commerce",
+  "marketplaces",
+  "logistics",
+  "ai-ops",
+  "communications",
+  "education",
+  "real-estate",
+]);
 const VALID_REVIEW_STATUSES = new Set(["pending", "approved"]);
 
 function parseArgs(argv) {

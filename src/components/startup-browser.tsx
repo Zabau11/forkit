@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   categoryFilters,
+  formatCategoryLabel,
   startupSortOptions,
   type CategoryFilter,
   type Startup,
@@ -148,7 +149,7 @@ export function StartupBrowser({
                     : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",
                 )}
               >
-                {filter}
+                {formatCategoryLabel(filter)}
               </Link>
             ))}
           </div>

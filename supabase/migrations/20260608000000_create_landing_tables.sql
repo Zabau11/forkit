@@ -4,7 +4,23 @@ create table if not exists public.startups (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   description text not null,
-  category text not null check (category in ('saas', 'ai', 'marketplace')),
+  category text not null check (
+    category in (
+      'finance',
+      'productivity',
+      'devtools',
+      'workforce',
+      'data',
+      'automation',
+      'commerce',
+      'marketplaces',
+      'logistics',
+      'ai-ops',
+      'communications',
+      'education',
+      'real-estate'
+    )
+  ),
   amount_raised text not null,
   round_label text not null,
   sort_order integer not null default 0,

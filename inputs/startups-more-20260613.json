@@ -3,7 +3,7 @@
     {
       "name": "Shopify",
       "description": "Commerce platform for online stores, payments, checkout, inventory, shipping, and merchant operations.",
-      "category": "saas",
+      "category": "commerce",
       "amountRaised": "$100B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://www.shopify.com",
@@ -18,7 +18,7 @@
     {
       "name": "Toast",
       "description": "Restaurant point-of-sale, payments, online ordering, payroll, loyalty, and operations software.",
-      "category": "saas",
+      "category": "commerce",
       "amountRaised": "$10B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://pos.toasttab.com",
@@ -33,7 +33,7 @@
     {
       "name": "DocuSign",
       "description": "Electronic signature and agreement workflow platform for contracts, forms, approvals, and document completion.",
-      "category": "saas",
+      "category": "productivity",
       "amountRaised": "$10B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://www.docusign.com",
@@ -48,7 +48,7 @@
     {
       "name": "Datadog",
       "description": "Observability and monitoring platform for infrastructure, applications, logs, security, and engineering operations.",
-      "category": "saas",
+      "category": "devtools",
       "amountRaised": "$40B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://www.datadoghq.com",
@@ -63,7 +63,7 @@
     {
       "name": "Notion",
       "description": "All-in-one workspace for docs, notes, projects, knowledge bases, wikis, and lightweight databases.",
-      "category": "saas",
+      "category": "productivity",
       "amountRaised": "$10B valuation",
       "roundLabel": "Private valuation",
       "websiteUrl": "https://www.notion.com",
@@ -78,7 +78,7 @@
     {
       "name": "Figma",
       "description": "Collaborative interface design, prototyping, whiteboarding, and design systems platform.",
-      "category": "saas",
+      "category": "productivity",
       "amountRaised": "$10B+ valuation",
       "roundLabel": "Private valuation",
       "websiteUrl": "https://www.figma.com",
@@ -93,7 +93,7 @@
     {
       "name": "Duolingo",
       "description": "Consumer learning platform with gamified lessons, streaks, personalization, subscriptions, and mobile-first retention loops.",
-      "category": "saas",
+      "category": "education",
       "amountRaised": "$10B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://www.duolingo.com",
@@ -108,7 +108,7 @@
     {
       "name": "Perplexity",
       "description": "AI answer engine for search, research, citations, summaries, and question answering.",
-      "category": "ai",
+      "category": "ai-ops",
       "amountRaised": "$10B+ valuation",
       "roundLabel": "Private valuation",
       "websiteUrl": "https://www.perplexity.ai",
@@ -123,7 +123,7 @@
     {
       "name": "Airbnb",
       "description": "Marketplace for short-term stays, guest booking, host tools, payments, reviews, and travel inventory.",
-      "category": "marketplace",
+      "category": "marketplaces",
       "amountRaised": "$80B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://www.airbnb.com",
@@ -138,7 +138,7 @@
     {
       "name": "Zillow",
       "description": "Real estate marketplace and data platform for home search, listings, agent discovery, rentals, and property information.",
-      "category": "marketplace",
+      "category": "real-estate",
       "amountRaised": "$15B+ market cap",
       "roundLabel": "Public company",
       "websiteUrl": "https://www.zillow.com",

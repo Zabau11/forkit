@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-import { getStartupDetailBySlug } from "@/lib/supabase";
+import { formatCategoryLabel, getStartupDetailBySlug } from "@/lib/supabase";
 
 export const alt = "Startup fork ideas on forkitt";
 export const size = {
@@ -22,7 +22,7 @@ export default async function StartupOpenGraphImage({
   const startup = await getStartupDetailBySlug(slug);
 
   const name = startup?.name ?? "Startup";
-  const category = startup?.category ?? "startup";
+  const category = startup ? formatCategoryLabel(startup.category) : "startup";
   const ideaCount = startup?.forkIdeas.length ?? 0;
 
   return new ImageResponse(

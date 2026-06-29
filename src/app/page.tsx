@@ -11,6 +11,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   getLandingPageData,
+  formatCategoryLabel,
   normalizeCategory,
   normalizeSearchQuery,
   normalizeStartupSort,
@@ -47,6 +48,9 @@ export default async function Home({ searchParams }: HomeProps) {
     sort: activeSort,
   });
   const featuredStartup = data.startups[0] ?? null;
+  const featuredCategory = featuredStartup
+    ? formatCategoryLabel(featuredStartup.category)
+    : null;
 
   const stats = [
     {
@@ -201,7 +205,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         category
                       </div>
                       <div className="mt-2 text-[28px] font-medium leading-none">
-                        {featuredStartup.category.toUpperCase()}
+                        {featuredCategory}
                       </div>
                     </div>
                   </div>
@@ -222,7 +226,7 @@ export default async function Home({ searchParams }: HomeProps) {
                         </div>
                         <p className="mt-2 max-w-[360px] text-sm leading-6 text-muted-foreground">
                           {featuredStartup.roundLabel} in{" "}
-                          {featuredStartup.category.toUpperCase()}.
+                          {featuredCategory}.
                         </p>
                       </div>
                       <div className="inline-flex shrink-0 items-center gap-2 font-mono text-[11px] text-foreground">

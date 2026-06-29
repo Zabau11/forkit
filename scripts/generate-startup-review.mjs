@@ -8,7 +8,21 @@ const DEFAULT_PROVIDER = "anthropic";
 const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6";
 const DEFAULT_OPENAI_MODEL = "gpt-5.5";
 const DEFAULT_IDEAS_PER_STARTUP = 5;
-const VALID_CATEGORIES = new Set(["saas", "ai", "marketplace"]);
+const VALID_CATEGORIES = new Set([
+  "finance",
+  "productivity",
+  "devtools",
+  "workforce",
+  "data",
+  "automation",
+  "commerce",
+  "marketplaces",
+  "logistics",
+  "ai-ops",
+  "communications",
+  "education",
+  "real-estate",
+]);
 
 function loadLocalEnv() {
   try {
@@ -270,7 +284,10 @@ function createReviewSchema(ideasPerStartup) {
         properties: {
           name: { type: "string" },
           description: { type: "string" },
-          category: { type: "string", enum: ["saas", "ai", "marketplace"] },
+          category: {
+            type: "string",
+            enum: Array.from(VALID_CATEGORIES),
+          },
           amountRaised: { type: "string" },
           roundLabel: { type: "string" },
           websiteUrl: { type: "string" },

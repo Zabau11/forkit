@@ -11,13 +11,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Startup } from "@/lib/supabase";
+import { formatCategoryLabel, type Startup } from "@/lib/supabase";
 
 type StartupCardProps = {
   startup: Startup;
 };
 
 export function StartupCard({ startup }: StartupCardProps) {
+  const category = formatCategoryLabel(startup.category);
+
   return (
     <Link
       href={`/startups/${startup.slug}`}
@@ -65,7 +67,7 @@ export function StartupCard({ startup }: StartupCardProps) {
               <div className="font-mono text-[10px] uppercase text-muted-foreground">
                 category
               </div>
-              <div className="mt-1 text-sm leading-6">{startup.category}</div>
+              <div className="mt-1 text-sm leading-6">{category}</div>
             </div>
             <div>
               <div className="font-mono text-[10px] uppercase text-muted-foreground">

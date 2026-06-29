@@ -1,12 +1,48 @@
 import { createClient } from "@supabase/supabase-js";
 
-export const categoryFilters = ["all", "saas", "ai", "marketplace"] as const;
+export const categoryFilters = [
+  "all",
+  "finance",
+  "productivity",
+  "devtools",
+  "workforce",
+  "data",
+  "automation",
+  "commerce",
+  "marketplaces",
+  "logistics",
+  "ai-ops",
+  "communications",
+  "education",
+  "real-estate",
+] as const;
 
 export type CategoryFilter = (typeof categoryFilters)[number];
 
 export const startupSortOptions = ["latest", "name", "ideas"] as const;
 
 export type StartupSort = (typeof startupSortOptions)[number];
+
+export const categoryLabels: Record<CategoryFilter, string> = {
+  all: "all",
+  finance: "finance",
+  productivity: "productivity",
+  devtools: "devtools",
+  workforce: "workforce",
+  data: "data",
+  automation: "automation",
+  commerce: "commerce",
+  marketplaces: "marketplaces",
+  logistics: "logistics",
+  "ai-ops": "AI ops",
+  communications: "communications",
+  education: "education",
+  "real-estate": "real estate",
+};
+
+export function formatCategoryLabel(category: CategoryFilter): string {
+  return categoryLabels[category];
+}
 
 export type ForkIdea = {
   id: string;

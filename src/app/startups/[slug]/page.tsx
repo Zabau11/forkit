@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  formatCategoryLabel,
   getStartupDetailBySlug,
   type StartupDetail,
   type StartupDetailForkIdea,
@@ -93,6 +94,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
   );
   const bestIdea = forkIdeas[0] ?? null;
   const bestScore = bestIdea?.viabilityScore ?? null;
+  const category = formatCategoryLabel(startup.category);
 
   const highlights = [
     {
@@ -202,7 +204,7 @@ export default async function StartupPage({ params }: StartupPageProps) {
               variant="secondary"
               className="rounded-full border border-border bg-secondary px-3 py-1 font-mono text-[11px] font-normal text-muted-foreground"
             >
-              {startup.category}
+              {category}
             </Badge>
             <Badge
               variant="outline"
