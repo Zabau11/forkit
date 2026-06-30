@@ -13,6 +13,7 @@ import {
   getLandingPageData,
   formatCategoryLabel,
   normalizeCategory,
+  normalizeOpportunityFilters,
   normalizeSearchQuery,
   normalizeStartupSort,
 } from "@/lib/supabase";
@@ -24,6 +25,7 @@ export const dynamic = "force-dynamic";
 type HomeProps = {
   searchParams: Promise<{
     category?: string;
+    fit?: string;
     q?: string;
     sort?: string;
   }>;
@@ -40,10 +42,12 @@ const heroTags = [
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const activeCategory = normalizeCategory(params.category);
+  const activeOpportunityFilters = normalizeOpportunityFilters(params.fit);
   const activeQuery = normalizeSearchQuery(params.q);
   const activeSort = normalizeStartupSort(params.sort);
   const data = await getLandingPageData({
     category: activeCategory,
+    opportunityFilters: activeOpportunityFilters,
     query: activeQuery,
     sort: activeSort,
   });
@@ -280,6 +284,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <StartupBrowser
           startups={data.startups}
           activeCategory={activeCategory}
+          activeOpportunityFilters={activeOpportunityFilters}
           activeQuery={activeQuery}
           activeSort={activeSort}
           actionPath="/"

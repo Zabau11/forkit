@@ -9,6 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import {
   getLandingPageData,
   normalizeCategory,
+  normalizeOpportunityFilters,
   normalizeSearchQuery,
   normalizeStartupSort,
 } from "@/lib/supabase";
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
 type StartupsPageProps = {
   searchParams: Promise<{
     category?: string;
+    fit?: string;
     q?: string;
     sort?: string;
   }>;
@@ -46,10 +48,12 @@ export default async function StartupsPage({
 }: StartupsPageProps) {
   const params = await searchParams;
   const activeCategory = normalizeCategory(params.category);
+  const activeOpportunityFilters = normalizeOpportunityFilters(params.fit);
   const activeQuery = normalizeSearchQuery(params.q);
   const activeSort = normalizeStartupSort(params.sort);
   const data = await getLandingPageData({
     category: activeCategory,
+    opportunityFilters: activeOpportunityFilters,
     query: activeQuery,
     sort: activeSort,
   });
@@ -160,6 +164,7 @@ export default async function StartupsPage({
         <StartupBrowser
           startups={data.startups}
           activeCategory={activeCategory}
+          activeOpportunityFilters={activeOpportunityFilters}
           activeQuery={activeQuery}
           activeSort={activeSort}
           actionPath="/startups"

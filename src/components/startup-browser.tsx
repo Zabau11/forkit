@@ -7,8 +7,11 @@ import { Input } from "@/components/ui/input";
 import {
   categoryFilters,
   formatCategoryLabel,
+  formatOpportunityFilterLabel,
+  opportunityFilters,
   startupSortOptions,
   type CategoryFilter,
+  type OpportunityFilter,
   type Startup,
   type StartupSort,
 } from "@/lib/supabase";
@@ -17,6 +20,7 @@ import { cn } from "@/lib/utils";
 type StartupBrowserProps = {
   startups: Startup[];
   activeCategory: CategoryFilter;
+  activeOpportunityFilters: OpportunityFilter[];
   activeQuery: string;
   activeSort: StartupSort;
   actionPath: string;
@@ -34,11 +38,13 @@ const sortLabels: Record<StartupSort, string> = {
 function createBrowseHref({
   browsePath,
   category,
+  opportunityFilters,
   query,
   sort,
 }: {
   browsePath: string;
   category: CategoryFilter;
+  opportunityFilters: OpportunityFilter[];
   query: string;
   sort: StartupSort;
 }) {
@@ -50,6 +56,10 @@ function createBrowseHref({
 
   if (query) {
     params.set("q", query);
+  }
+
+  if (opportunityFilters.length) {
+    params.set("fit", opportunityFilters.join(","));
   }
 
   if (sort !== "latest") {
@@ -70,6 +80,7 @@ function createBrowseHref({
 export function StartupBrowser({
   startups,
   activeCategory,
+  activeOpportunityFilters,
   activeQuery,
   activeSort,
   actionPath,
@@ -78,7 +89,10 @@ export function StartupBrowser({
   gridClassName,
 }: StartupBrowserProps) {
   const hasActiveFilters =
-    activeCategory !== "all" || activeQuery || activeSort !== "latest";
+    activeCategory !== "all" ||
+    activeOpportunityFilters.length > 0 ||
+    activeQuery ||
+    activeSort !== "latest";
 
   return (
     <>
@@ -90,6 +104,11 @@ export function StartupBrowser({
           <div className="mt-2 flex flex-col gap-3 sm:flex-row">
             <form action={actionPath} className="relative flex-1">
               <input type="hidden" name="category" value={activeCategory} />
+              <input
+                type="hidden"
+                name="fit"
+                value={activeOpportunityFilters.join(",")}
+              />
               <input type="hidden" name="sort" value={activeSort} />
               <Search
                 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -106,6 +125,7 @@ export function StartupBrowser({
                   href={createBrowseHref({
                     browsePath,
                     category: activeCategory,
+                    opportunityFilters: activeOpportunityFilters,
                     query: "",
                     sort: activeSort,
                   })}
@@ -139,6 +159,7 @@ export function StartupBrowser({
                 href={createBrowseHref({
                   browsePath,
                   category: filter,
+                  opportunityFilters: activeOpportunityFilters,
                   query: activeQuery,
                   sort: activeSort,
                 })}
@@ -156,6 +177,39 @@ export function StartupBrowser({
 
           <div className="flex flex-wrap items-center gap-1.5">
             <div className="mr-1 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase text-muted-foreground">
+              fit
+            </div>
+            {opportunityFilters.map((filter) => {
+              const isActive = activeOpportunityFilters.includes(filter);
+              const nextOpportunityFilters = isActive
+                ? activeOpportunityFilters.filter((item) => item !== filter)
+                : [...activeOpportunityFilters, filter];
+
+              return (
+                <Link
+                  key={filter}
+                  href={createBrowseHref({
+                    browsePath,
+                    category: activeCategory,
+                    opportunityFilters: nextOpportunityFilters,
+                    query: activeQuery,
+                    sort: activeSort,
+                  })}
+                  className={cn(
+                    "rounded-full border px-3 py-1 font-mono text-[11px] transition-colors",
+                    isActive
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border text-muted-foreground hover:border-foreground/40 hover:text-foreground",
+                  )}
+                >
+                  {formatOpportunityFilterLabel(filter)}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            <div className="mr-1 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase text-muted-foreground">
               <SlidersHorizontal className="size-3" aria-hidden="true" />
               sort
             </div>
@@ -165,6 +219,7 @@ export function StartupBrowser({
                 href={createBrowseHref({
                   browsePath,
                   category: activeCategory,
+                  opportunityFilters: activeOpportunityFilters,
                   query: activeQuery,
                   sort,
                 })}
@@ -191,6 +246,11 @@ export function StartupBrowser({
         {activeQuery ? (
           <div className="hidden max-w-[360px] truncate font-mono text-[11px] text-muted-foreground sm:block">
             query: {activeQuery}
+          </div>
+        ) : activeOpportunityFilters.length ? (
+          <div className="hidden max-w-[420px] truncate font-mono text-[11px] text-muted-foreground sm:block">
+            fit:{" "}
+            {activeOpportunityFilters.map(formatOpportunityFilterLabel).join(", ")}
           </div>
         ) : null}
       </div>

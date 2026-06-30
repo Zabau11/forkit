@@ -23,6 +23,17 @@ export const startupSortOptions = ["latest", "name", "ideas"] as const;
 
 export type StartupSort = (typeof startupSortOptions)[number];
 
+export const opportunityFilters = [
+  "b2b",
+  "low-code",
+  "high-ticket",
+  "local-services",
+  "regulated",
+  "workflow-automation",
+] as const;
+
+export type OpportunityFilter = (typeof opportunityFilters)[number];
+
 export const categoryLabels: Record<CategoryFilter, string> = {
   all: "all",
   finance: "finance",
@@ -42,6 +53,21 @@ export const categoryLabels: Record<CategoryFilter, string> = {
 
 export function formatCategoryLabel(category: CategoryFilter): string {
   return categoryLabels[category];
+}
+
+export const opportunityFilterLabels: Record<OpportunityFilter, string> = {
+  b2b: "B2B",
+  "low-code": "low-code",
+  "high-ticket": "high-ticket",
+  "local-services": "local services",
+  regulated: "regulated",
+  "workflow-automation": "workflow automation",
+};
+
+export function formatOpportunityFilterLabel(
+  filter: OpportunityFilter,
+): string {
+  return opportunityFilterLabels[filter];
 }
 
 export type ForkIdea = {
@@ -85,6 +111,7 @@ export type Startup = {
   pattern?: string | null;
   sortOrder: number;
   createdAt: string;
+  opportunityFilters: OpportunityFilter[];
   forkIdeas: ForkIdea[];
 };
 
@@ -110,6 +137,7 @@ export type LandingPageData = {
 
 export type LandingPageFilters = {
   category: CategoryFilter;
+  opportunityFilters: OpportunityFilter[];
   query: string;
   sort: StartupSort;
 };
@@ -181,6 +209,23 @@ export function normalizeSearchQuery(value: string | undefined): string {
   return typeof value === "string" ? value.trim().slice(0, 80) : "";
 }
 
+export function normalizeOpportunityFilters(
+  value: string | string[] | undefined,
+): OpportunityFilter[] {
+  const values = Array.isArray(value) ? value : value?.split(",");
+
+  if (!values) {
+    return [];
+  }
+
+  return values
+    .map((item) => item.trim())
+    .filter((item): item is OpportunityFilter =>
+      opportunityFilters.includes(item as OpportunityFilter),
+    )
+    .filter((item, index, items) => items.indexOf(item) === index);
+}
+
 export function normalizeStartupSort(value: string | undefined): StartupSort {
   if (value && startupSortOptions.includes(value as StartupSort)) {
     return value as StartupSort;
@@ -204,6 +249,7 @@ export function createSupabaseServerClient() {
 
 export async function getLandingPageData({
   category,
+  opportunityFilters: activeOpportunityFilters,
   query,
   sort,
 }: LandingPageFilters): Promise<LandingPageData> {
@@ -241,7 +287,12 @@ export async function getLandingPageData({
           id,
           title,
           niche,
-          sort_order
+          sort_order,
+          problem,
+          why_it_works,
+          mvp,
+          go_to_market,
+          pricing
         )
       `,
     )
@@ -280,7 +331,13 @@ export async function getLandingPageData({
   const startupRows = (startupResult.data ?? []) as unknown as StartupRow[];
   const cadenceRow = cadenceResult.data as LandingSettingRow | null;
   const startups = sortStartups(
-    filterStartups(startupRows.map(mapStartupRow), query),
+    filterStartups(
+      filterStartupsByOpportunity(
+        startupRows.map(mapStartupRow),
+        activeOpportunityFilters,
+      ),
+      query,
+    ),
     sort,
   );
 
@@ -293,6 +350,19 @@ export async function getLandingPageData({
     },
     error: firstError?.message ?? null,
   };
+}
+
+function filterStartupsByOpportunity(
+  startups: Startup[],
+  activeFilters: OpportunityFilter[],
+): Startup[] {
+  if (!activeFilters.length) {
+    return startups;
+  }
+
+  return startups.filter((startup) =>
+    activeFilters.every((filter) => startup.opportunityFilters.includes(filter)),
+  );
 }
 
 function filterStartups(startups: Startup[], query: string): Startup[] {
@@ -338,8 +408,25 @@ function sortStartups(startups: Startup[], sort: StartupSort): Startup[] {
 
 function mapStartupRow(row: StartupRow): Startup {
   const forkIdeaRows = Array.isArray(row.fork_ideas) ? row.fork_ideas : [];
+  const forkIdeas = forkIdeaRows
+    .map((idea) => ({
+      id: idea.id,
+      title: idea.title,
+      niche: idea.niche,
+      sortOrder: idea.sort_order,
+      problem: idea.problem ?? null,
+      whyItWorks: idea.why_it_works ?? null,
+      mvp: idea.mvp ?? null,
+      goToMarket: idea.go_to_market ?? null,
+      pricing: idea.pricing ?? null,
+      viabilityScore: idea.viability_score ?? null,
+      evidence: Array.isArray(idea.evidence) ? idea.evidence : [],
+      upvotes: idea.upvotes ?? 0,
+      downvotes: idea.downvotes ?? 0,
+    }))
+    .sort((a, b) => a.sortOrder - b.sortOrder);
 
-  return {
+  const startup = {
     id: row.id,
     slug: row.slug ?? createStartupSlug(row.name),
     name: row.name,
@@ -352,24 +439,137 @@ function mapStartupRow(row: StartupRow): Startup {
     pattern: row.pattern ?? null,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
-    forkIdeas: forkIdeaRows
-      .map((idea) => ({
-        id: idea.id,
-        title: idea.title,
-        niche: idea.niche,
-        sortOrder: idea.sort_order,
-        problem: idea.problem ?? null,
-        whyItWorks: idea.why_it_works ?? null,
-        mvp: idea.mvp ?? null,
-        goToMarket: idea.go_to_market ?? null,
-        pricing: idea.pricing ?? null,
-        viabilityScore: idea.viability_score ?? null,
-        evidence: Array.isArray(idea.evidence) ? idea.evidence : [],
-        upvotes: idea.upvotes ?? 0,
-        downvotes: idea.downvotes ?? 0,
-      }))
-      .sort((a, b) => a.sortOrder - b.sortOrder),
+    forkIdeas,
   };
+
+  return {
+    ...startup,
+    opportunityFilters: inferOpportunityFilters(startup),
+  };
+}
+
+function inferOpportunityFilters(
+  startup: Omit<Startup, "opportunityFilters">,
+): OpportunityFilter[] {
+  const searchableText = [
+    startup.name,
+    startup.description,
+    startup.category,
+    startup.roundLabel,
+    startup.pattern ?? "",
+    ...startup.forkIdeas.flatMap((idea) => [
+      idea.title,
+      idea.niche,
+      idea.problem ?? "",
+      idea.whyItWorks ?? "",
+      idea.mvp ?? "",
+      idea.goToMarket ?? "",
+      idea.pricing ?? "",
+    ]),
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const filters = new Set<OpportunityFilter>();
+
+  if (
+    [
+      "firm",
+      "company",
+      "companies",
+      "business",
+      "operator",
+      "operators",
+      "teams",
+      "office",
+      "agency",
+      "clinics",
+      "retailers",
+      "vendors",
+    ].some((term) => searchableText.includes(term))
+  ) {
+    filters.add("b2b");
+  }
+
+  if (
+    startup.category === "automation" ||
+    ["template", "templates", "no-code", "low-code", "spreadsheet"].some(
+      (term) => searchableText.includes(term),
+    )
+  ) {
+    filters.add("low-code");
+  }
+
+  if (
+    /\$[3-9]\d{2}|\$[1-9][,\d]{3,}/.test(searchableText) ||
+    ["enterprise", "compliance", "procurement", "finance owner"].some((term) =>
+      searchableText.includes(term),
+    )
+  ) {
+    filters.add("high-ticket");
+  }
+
+  if (
+    [
+      "local",
+      "clinic",
+      "dental",
+      "restaurant",
+      "hotel",
+      "property",
+      "contractor",
+      "construction",
+      "franchise",
+      "salon",
+      "real estate",
+      "retailer",
+      "shop",
+    ].some((term) => searchableText.includes(term))
+  ) {
+    filters.add("local-services");
+  }
+
+  if (
+    startup.category === "finance" ||
+    startup.category === "workforce" ||
+    [
+      "compliance",
+      "regulated",
+      "audit",
+      "legal",
+      "healthcare",
+      "clinic",
+      "insurance",
+      "payroll",
+      "tax",
+      "banking",
+      "payments",
+      "immigration",
+      "nonprofit",
+    ].some((term) => searchableText.includes(term))
+  ) {
+    filters.add("regulated");
+  }
+
+  if (
+    startup.category === "automation" ||
+    [
+      "workflow",
+      "workflows",
+      "approval",
+      "approvals",
+      "checklist",
+      "intake",
+      "operations",
+      "reminders",
+      "tracker",
+      "dashboard",
+    ].some((term) => searchableText.includes(term))
+  ) {
+    filters.add("workflow-automation");
+  }
+
+  return opportunityFilters.filter((filter) => filters.has(filter));
 }
 
 function mapStartupDetailRow(row: StartupRow): StartupDetail {
